@@ -1,67 +1,67 @@
-/** VMESS 加密方法 */
+/** VMESS encryption method */
 const enum VMESS_SECURITY {
-    /** 推荐在 PC 上使用 */
+    /** Recommended for use on PC */
     aes_128_gcm = "aes-128-gcm",
 
-    /** 推荐在手机端使用 */
+    /** Recommended for use on mobile phones */
     chacha20_poly1305 = "chacha20-poly1305",
 
-    /** 自动选择（运行框架为 AMD64、ARM64 或 s390x 时为 aes-128-gcm 加密方式，其他情况则为 Chacha20-Poly1305 加密方式） */
+    /** Automatic selection (aes-128-gcm encryption method when the running framework is AMD64, ARM64 or s390x, and Chacha20-Poly1305 encryption method in other cases) */
     auto = "auto",
 
-    /** 不加密 */
+    /** no encryption */
     none = "none",
 
-    /** 不加密，也不进行消息认证 (v4.35.0+) */
+    /** No encryption, no message authentication (v4.35.0+) */
     zero = "zero"
 }
 
-/** Vmess 用户配置 */
+/** Vmess user configuration */
 class VmessUserObject {
-    /** VMess 用户的主 ID。必须是一个合法的 UUID */
+    /** The primary ID of the VMess user. Must be a valid UUID */
     id: string;
 
     /** 
-     * 为了进一步防止被探测，一个用户可以在主 ID 的基础上，再额外生成多个 ID
+     * In order to further prevent being detected, a user can generate multiple additional IDs on the basis of the main ID
      * 
-     * 这里只需要指定额外的 ID 的数量，推荐值为 0 代表启用 VMessAEAD
-     * 
-     * 不指定的话，默认值是 0。最大值 65535。这个值不能超过服务器端所指定的值。 
+     * Here you only need to specify the number of additional IDs, the recommended value is 0 to enable VMessAEAD
+     *
+     * If not specified, the default value is 0. The maximum value is 65535. This value cannot exceed the value specified by the server.
      */
     alterId: number = 0;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
-    /** 加密方式，客户端将使用配置的加密方式发送数据，服务器端自动识别，无需配置 */
+    /** Encryption method, the client will use the configured encryption method to send data, and the server will automatically identify it, no need to configure*/
     security: VMESS_SECURITY = VMESS_SECURITY.auto;
 
     /**
      * UserObject 
-     * @param user 用户名
-     * @param pass 密码
+     * @param user username
+     * @param pass password
      */
     constructor(id: string) {
         this.id = id;
     }
 }
 
-/** Vmess 服务器配置 */
+/** Vmess server configuration */
 class VmessServerObject {
-    /** 服务器地址 */
+    /** server address*/
     address: string;
 
-    /** 服务器端口 */
+    /** server port */
     port: number;
 
-    /** 用户列表 */
+    /** user list*/
     users: VmessUserObject[];
 
     /**
      * ServerObject
-     * @param address 服务器地址
-     * @param port 服务器端口
-     * @param users 用户配置
+     * @param address server address
+     * @param port server port
+     * @param users user configuration
      */
     constructor(address: string, port: number, users: VmessUserObject | VmessUserObject[]) {
         this.address = address;
@@ -72,14 +72,14 @@ class VmessServerObject {
     }
 }
 
-/** Vmess 出站配置 */
+/** Vmess outbound configuration */
 class VmessOutboundObject {
-    /** 一个数组，包含一系列的服务器配置 */
+    /** An array containing a series of server configurations */
     vnext: VmessServerObject[];
 
     /**
      * VmessOutboundObject
-     * @param servers 服务器配置
+     * @param servers server configuration
      */
     constructor(servers: VmessServerObject | VmessServerObject[]) {
         if (servers instanceof VmessServerObject) servers = [servers];
@@ -87,30 +87,30 @@ class VmessOutboundObject {
     }
 }
 
-/** Vmess 客户端配置 */
+/** Vmess client configuration */
 class VmessClientObject {
-    /** VMess 的用户 ID。必须是一个合法的 UUID */
+    /** User ID for VMess. Must be a valid UUID */
     id: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
-     * 为了进一步防止被探测，一个用户可以在主 ID 的基础上，再额外生成多个 ID
+     * In order to further prevent being detected, a user can generate multiple additional IDs on the basis of the main ID
      *
-     * 这里只需要指定额外的 ID 的数量，推荐值为 0 代表启用 VMessAEAD
+     * Here you only need to specify the number of additional IDs, the recommended value is 0 to enable VMessAEAD
      *
-     * 不指定的话，默认值是 0。最大值 65535。这个值不能超过服务器端所指定的值。
+     * If not specified, the default value is 0. The maximum value is 65535. This value cannot exceed the value specified by the server.
      */
     alterId: number = 0;
 
-    /** 用户邮箱地址，用于区分不同用户的流量 */
+    /** User email address, used to distinguish the traffic of different users */
     email: string;
 
     /**
      * VmessClientObject
-     * @param id VMess 的用户 ID
-     * @param email 用户邮箱地址，用于区分不同用户的流量
+     * @param id VMess user ID
+     * @param email User email address, used to distinguish the traffic of different users
      */
     constructor(id: string, email: string) {
         this.id = id;
@@ -118,50 +118,50 @@ class VmessClientObject {
     }
 }
 
-/** 指示对应的出站协议使用另一个服务器 */
+/** Instruct the corresponding outbound protocol to use another server */
 class DetourObject {
-    /** 一个入站协议的tag */
+    /** An inbound protocol tag */
     to: string;
 
     /**
      * DetourObject
-     * @param to 一个入站协议的tag
+     * @param to an inbound protocol tag
      */
     constructor(to: string) {
         this.to = to;
     }
 }
 
-/** clients 的默认配置。仅在配合detour时有效 */
+/** Default configuration for clients. Only valid when combined with detour */
 class DefaultObject {
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
-     * 为了进一步防止被探测，一个用户可以在主 ID 的基础上，再额外生成多个 ID
+     * In order to further prevent being detected, a user can generate multiple additional IDs on the basis of the main ID
      *
-     * 这里只需要指定额外的 ID 的数量，推荐值为 0 代表启用 VMessAEAD
+     * Here you only need to specify the number of additional IDs, the recommended value is 0 to enable VMessAEAD
      *
-     * 不指定的话，默认值是 0。最大值 65535。这个值不能超过服务器端所指定的值。
+     * If not specified, the default value is 0. The maximum value is 65535. This value cannot exceed the value specified by the server.
      */
     alterId: number = 0;
 }
 
-/** Vmess 入站配置 */
+/** Vmess inbound configuration */
 class VmessInboundObject {
-    /** 一组服务器认可的用户。clients 可以为空。当此配置用作动态端口时，V2Ray 会自动创建用户。 */
+    /** A set of users recognized by the server. clients can be empty. When this configuration is used as a dynamic port, V2Ray will automatically create users. */
     clients: VmessClientObject[];
 
-    /** 指示对应的出站协议使用另一个服务器 */
+    /** Instruct the corresponding outbound protocol to use another server */
     detour: DetourObject = null;
 
-    /** clients 的默认配置。仅在配合detour时有效 */
+    /** Default configuration for clients. Only valid when combined with detour */
     default: DefaultObject = null;
 
     /** 
-     * 是否禁止客户端使用不安全的加密方式
+     * Whether to prohibit the client from using insecure encryption
      * 
-     * 当客户端指定下列加密方式时，服务器会主动断开连接
+     * When the client specifies the following encryption methods, the server will actively disconnect
      * * `none`
      * * `aes-128-cfb`
      */
@@ -169,7 +169,7 @@ class VmessInboundObject {
 
     /**
      * VmessInboundObject
-     * @param clients 客户端配置
+     * @param clients client configuration
      */
     constructor(clients: VmessClientObject | VmessClientObject[]) {
         if (clients instanceof VmessClientObject) clients = [clients];
