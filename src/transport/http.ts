@@ -1,4 +1,4 @@
-/** HTTP 连接方式 */
+/** HTTP connection method */
 const enum HTTP_METHOD {
     GET = "GET",
     POST = "POST",
@@ -8,32 +8,32 @@ const enum HTTP_METHOD {
 }
 
 /**
- * V2Ray 3.17 中加入了基于 HTTP/2 的传输方式。它完整按照 HTTP/2 标准实现，可以通过其它的 HTTP 服务器（如 Nginx）进行中转。
- * 
- * 由 HTTP/2 的建议，客户端和服务器必须同时开启 TLS 才可以正常使用这个传输方式。
- * 
- * V2Ray 4.20 中对服务端的 TLS 配置的强制条件移除，为了在特殊用途的分流部署环境中，由外部网关组件完成 TLS 层对话，
- * V2Ray 作为后端应用，网关和 V2Ray 间使用称为 h2c 的明文 http/2 进行通讯。
- */
+* V2Ray 3.17 has added HTTP/2 based transmission mode. It is fully implemented in accordance with the HTTP/2 standard and can be transferred through other HTTP servers (such as Nginx).
+*
+* According to the suggestion of HTTP/2, the client and server must enable TLS at the same time to use this transmission method normally.
+*
+* In V2Ray 4.20, the mandatory conditions for the TLS configuration of the server are removed. In order to complete the TLS layer dialogue by the external gateway component in the special-purpose distribution deployment environment,
+* V2Ray is used as a back-end application, and the gateway and V2Ray use plaintext http/2 called h2c for communication.
+*/
 class HttpObject {
-    /** 
-     * 一个字符串数组，每一个元素是一个域名
-     * 
-     * 客户端会随机从列表中选出一个域名进行通信，服务器会验证域名是否在列表中 
+    /**
+     * An array of strings, each element is a domain name
+     *
+     * The client will randomly select a domain name from the list for communication, and the server will verify whether the domain name is in the list
      */
     host: string[] = [];
 
-    /** 
-     * HTTP 路径，由 / 开头
-     * 
-     * 客户端和服务器必须一致 
+    /**
+     * HTTP path, starting with /
+     *
+     * Client and server must match
      */
     path: string = "/";
 
-    /** HTTP 方法 */
+    /** HTTP method */
     method: HTTP_METHOD = HTTP_METHOD.PUT;
 
-    /** HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是一个数组 */
+    /** HTTP header, a key-value pair, each key represents the name of an HTTP header, and the corresponding value is an array*/
     headers: any = {};
 }
 
