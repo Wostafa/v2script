@@ -5,45 +5,45 @@ const enum TPROXY {
 }
 
 /**
- * 用作透明代理的配置
- */
+* Configuration used as a transparent proxy
+*/
 class SockoptObject {
-    /** 
-     * 一个整数。当其值非零时，在出站连接上标记 SO_MARK
-     * * 仅适用于 Linux 系统
-     * * 需要 CAP_NET_ADMIN 权限。
+    /**
+     * an integer. Mark SO_MARK on outbound connections when its value is non-zero
+     * * Applies to Linux systems only
+     * * Requires CAP_NET_ADMIN permission.
      */
     mark: number = 0;
 
     /**
-     * 是否启用 [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80)
-     * 
-     * 当其值为 true 时，强制开启 TFO；当其值为 false 时，强制关闭 TFO；当此项不存在时，使用系统默认设置
-     * 
-     * 可用于入站出站连接
-     * 
-     * 仅在以下版本（或更新版本）的操作系统中可用:
+     * Whether to enable [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80)
+     *
+     * When its value is true, TFO is forcibly turned on; when its value is false, TFO is forcibly closed; when this item does not exist, the system default setting is used
+     *
+     * Available for inbound and outbound connections
+     *
+     * Only available on the following versions (or newer) of the operating system:
      * * Windows 10 (1604)
      * * Mac OS 10.11 / iOS 9
-     * * Linux 3.16：系统已默认开启，无需配置
+     * * Linux 3.16: The system is enabled by default, no configuration is required
      * * FreeBSD 10.3
      */
     tcpFastOpen: boolean = false;
 
-    /** 入站连接的 [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80) 队列长度 */
+    /** [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80 for inbound connections ) queue length */
     tcpFastOpenQueueLength: number = 4096;
 
-    /** 
-     * 是否开启透明代理（仅适用于 Linux）
-     * * "redirect"：使用 Redirect 模式的透明代理。支持 TCP 和 UDP 连接
-     * * "tproxy"：使用 TProxy 模式的透明代理。支持 TCP 和 UDP 连接
-     * * "off"：关闭透明代理
-     * 
-     * ! 透明代理需要 Root 或 CAP_NET_ADMIN 权限。 
+    /**
+     * Whether to enable transparent proxy (only for Linux)
+     * * "redirect": Transparent proxy using Redirect mode. Supports TCP and UDP connections
+     * * "tproxy": Transparent proxy using TProxy mode. Supports TCP and UDP connections
+     * * "off": Turn off transparent proxy
+     *
+     * ! Transparent proxy requires Root or CAP_NET_ADMIN authority.
      */
     tproxy: TPROXY = TPROXY.off;
 
-    /** TCP 保持活跃的数据包的发送间隔，以秒为单位（仅适用于 Linux） */
+    /** TCP keep-alive packet sending interval in seconds (Linux only) */
     tcpKeepAliveInterval: number = 0;
 }
 
