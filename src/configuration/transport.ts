@@ -1,30 +1,30 @@
 import { DomainSocketObject, grpcObject, HttpObject, KcpObject, QUICObject, TcpObject, WebSocketObject } from "../transport";
 
 /**
- * 底层传输方式（transport）是当前 V2Ray 节点和其它节点对接的方式
- * 
- * 底层传输方式提供了稳定的数据传输通道。通常来说，一个网络连接的两端需要有对称的传输方式。
- * 比如一端用了 WebSocket，那么另一个端也必须使用 WebSocket，否则无法建立连接。
- */
+* The underlying transmission method (transport) is the way the current V2Ray node connects with other nodes
+*
+* The underlying transmission method provides a stable data transmission channel. Generally speaking, both ends of a network connection need to have a symmetrical transmission mode.
+* For example, if one end uses WebSocket, then the other end must also use WebSocket, otherwise the connection cannot be established.
+*/
 export class TransportObject {
-    /** 针对 TCP 连接的配置 */
+    /** Configuration for TCP connection */
     tcpSettings: TcpObject = null;
 
-    /** 针对 mKCP 连接的配置 */
+    /** Configuration for mKCP connection */
     kcpSettings: KcpObject = null;
 
-    /** 针对 WebSocket 连接的配置 */
+    /** Configuration for WebSocket connection */
     wsSettings: WebSocketObject = null;
 
-    /** 针对 HTTP/2 连接的配置 */
+    /** Configuration for HTTP/2 connections */
     httpSettings: HttpObject = null;
 
-    /** 针对 QUIC 连接的配置 */
+    /** Configuration for QUIC connections */
     quicSettings: QUICObject = null;
 
-    /** 针对 Domain Socket 连接的配置 */
+    /** Configuration for Domain Socket connection */
     dsSettings: DomainSocketObject = null;
 
-    /** 针对 gRPC 连接的配置 */
+    /** Configuration for gRPC connection */
     grpcSettings: grpcObject = null;
 }
