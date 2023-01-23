@@ -1,32 +1,32 @@
 import { AccountObject } from "../../lib";
 
-/** HTTP 入站配置 */
+/** HTTP inbound configuration */
 class HTTPInboundObject {
-    /** 从客户端读取数据的超时设置（秒），`0` 表示不限时 */
+    /** Timeout setting (seconds) for reading data from the client, `0` means unlimited time*/
     timeout: number = 300;
 
-    /** 
-     * 一个数组，数组中每个元素为一个用户帐号。默认值为空
-     * 
-     * 当 accounts 非空时，HTTP 代理将对入站连接进行 `Basic Authentication` 验证 
+    /**
+     * An array, each element in the array is a user account. The default value is empty
+     *
+     * When accounts is non-null, the HTTP proxy will perform `Basic Authentication` verification on inbound connections
      */
     accounts: AccountObject[] = [];
 
-    /** 当为 `true` 时，会转发所有 HTTP 请求，而非只是代理请求。若配置不当，开启此选项会导致死循环 */
+    /** When `true`, all HTTP requests are forwarded, not just proxy requests. If the configuration is improper, turning on this option will lead to an infinite loop */
     allowTransparent: boolean = false;
 
-    /** 用户等级，所有连接使用这一等级 */
+    /** User level, all connections use this level */
     userLevel: number = 0;
 }
 
-/** HTTP 出站配置 */
+/** HTTP outbound configuration */
 class HTTPOutboundObject {
-    /** HTTP 代理服务器配置，若配置多个，循环使用 (RoundRobin) */
+    /** HTTP proxy server configuration, if more than one is configured, cycle (RoundRobin) */
     servers: HTTPServerObject [];
 
     /**
      * HTTPOutboundObject
-     * @param servers HTTP 代理服务器配置
+     * @param servers HTTP proxy server configuration
      */
     constructor(servers: HTTPServerObject | HTTPServerObject[]) {
         if (servers instanceof HTTPServerObject) servers = [servers];
@@ -34,22 +34,22 @@ class HTTPOutboundObject {
     }
 }
 
-/** HTTP 代理服务器配置 */
+/** HTTP proxy server configuration */
 class HTTPServerObject {
-    /** HTTP 代理服务器地址 */
+    /** HTTP proxy server address */
     address: string;
 
-    /** HTTP 代理服务器端口 */
+    /** HTTP proxy server port */
     port: number;
 
-    /** 一个数组，数组中每个元素为一个用户帐号 */
+    /** An array, each element in the array is a user account */
     users: AccountObject[] = null;
 
     /**
      * HTTPServerObject
-     * @param address HTTP 代理服务器地址
-     * @param port HTTP 代理服务器端口
-     * @param users 用户帐号
+     * @param address HTTP proxy server address
+     * @param port HTTP proxy server port
+     * @param users user accounts
      */
     constructor(address: string, port: number, users?: AccountObject | AccountObject[]) {
         this.address = address;
@@ -58,21 +58,21 @@ class HTTPServerObject {
     }
 }
 
-/** 用户帐号 */
+/** user account*/
 class HTTPUserObject {
-    /** 用户名 */
+    /** username*/
     user: string;
 
-    /** 密码 */
+    /** password*/
     pass: string;
 
-    /** 用户等级 */
+    /** user level*/
     userLevel: number = 0;
 
     /**
      * UserObject 
-     * @param user 用户名
-     * @param pass 密码
+     * @param user username
+     * @param pass password
      */
     constructor(user: string, pass: string) {
         this.user = user;
