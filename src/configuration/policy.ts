@@ -1,26 +1,26 @@
 /**
- * 本地策略可以配置一些用户相关的权限，比如连接超时设置
- * 
- * V2Ray 处理的每一个连接都对应一个用户，按照用户的等级（level）应用不同的策略,
- * 本地策略可根据等级的不同而变化
- */
+* Local policies can configure some user-related permissions, such as connection timeout settings
+*
+* Each connection processed by V2Ray corresponds to a user, and different policies are applied according to the user's level.
+* Local policies can vary by level
+*/
 class PolicyObject {
     /**
-     * 一组键值对，每个键是一个字符串形式的数字（JSON 的要求）,
-     * 比如 "0"、"1" 等，双引号不能省略，此数字对应用户等级
-     * 
-     * 每一个值是一个 LevelPolicyObject
-     * 
-     * 此属性为私有属性，不支持直接调用，如需更改请使用 `setLevel()` 或 `removeLevel()` 方法
+     * A set of key-value pairs, each key is a number in the form of a string (required by JSON),
+     * Such as "0", "1", etc., the double quotes cannot be omitted, this number corresponds to the user level
+     *
+     * Each value is a LevelPolicyObject
+     *
+     * This attribute is a private attribute and does not support direct calls. If you need to change it, please use the `setLevel()` or `removeLevel()` method
      */
     private levels: Map<string, LevelPolicyObject> = new Map([["0", new LevelPolicyObject()]]);
     system: SystemPolicyObject = new SystemPolicyObject();
 
     /**
-     * 设置本地策略
-     * @param level 策略等级，其值为一个字符串
-     * @param policy 策略内容，其值为一个 LevelPolicyObject 对象
-     * @returns 当前对象
+     * Set local policy
+     * @param level strategy level, its value is a string
+     * @param policy policy content, its value is a LevelPolicyObject object
+     * @returns current object
      */
     setLevel(level: string, policy: LevelPolicyObject): PolicyObject {
         this.levels.set(level, policy);
@@ -28,9 +28,9 @@ class PolicyObject {
     }
 
     /**
-     * 删除本地策略
-     * @param level 策略等级，其值为一个字符串
-     * @returns 当前对象
+     * Delete local policy
+     * @param level strategy level, its value is a string
+     * @returns current object
      */
     removeLevel(level: string): PolicyObject {
         this.levels.delete(level);
@@ -39,86 +39,86 @@ class PolicyObject {
 }
 
 /**
- * 策略配置
- */
+* Policy configuration
+*/
 class LevelPolicyObject {
     /**
-     * 连接建立时的握手时间限制
-     * 
-     * 单位为秒。默认值为 4
-     * 
-     * 在入站代理处理一个新连接时，在握手阶段（比如 VMess 读取头部数据，判断目标服务器地址），
-     * 如果使用的时间超过这个时间，则中断该连接
+     * Handshake time limit when connection is established
+     *
+     * The unit is in seconds. The default is 4
+     *
+     * When the inbound proxy handles a new connection, in the handshake phase (for example, VMess reads the header data to determine the target server address),
+     * If the time used exceeds this time, the connection will be terminated
      */
     handshake: number = 4;
 
     /**
-     * 连接空闲的时间限制
-     * 
-     * 单位为秒。默认值为 300
-     * 
-     * 在入站出站代理处理一个连接时，如果在 connIdle 时间内，没有任何数据被传输（包括上行和下行数据），则中断该连接
+     * Time limit for connection idle
+     *
+     * The unit is in seconds. The default value is 300
+     *
+     * When the inbound and outbound proxy processes a connection, if no data is transmitted (including uplink and downlink data) within the connIdle time, the connection is terminated
      */
     connIdle: number = 300;
 
     /**
-     * 当连接下行线路关闭后的时间限制
-     * 
-     * 单位为秒。默认值为 2
-     * 
-     * 当服务器（如远端网站）关闭下行连接时，出站代理会在等待 `uplinkOnly` 时间后中断连接
+     * Time limit when connection downlink is closed
+     *
+     * The unit is in seconds. The default value is 2
+     *
+     * When the server (such as a remote website) closes the downlink connection, the outbound proxy will terminate the connection after waiting `uplinkOnly` time
      */
     uplinkOnly: number = 2;
 
     /**
-     * 当连接上行线路关闭后的时间限制
-     * 
-     * 单位为秒。默认值为 5
-     * 
-     * 当客户端（如浏览器）关闭上行连接时，入站代理会在等待 `downlinkOnly` 时间后中断连接
+     * time limit when connection uplink is closed
+     *
+     * The unit is in seconds. The default is 5
+     *
+     * When the client (such as a browser) closes the uplink connection, the inbound proxy will terminate the connection after waiting `downlinkOnly` time
      */
     downlinkOnly: number = 5;
 
     /**
-     * 当值为 `true` 时，开启当前等级的所有用户的上行流量统计
+     * When the value is `true`, enable the upstream traffic statistics of all users of the current level
      */
-    statsUserUplink: boolean = false;
+    statsUserUplink : boolean  =  false ;
 
     /**
-     * 当值为 `true` 时，开启当前等级的所有用户的下行流量统计
+     * When the value is `true`, enable the downstream traffic statistics of all users of the current level
      */
-    statsUserDownlink: boolean = false;
+    statsUserDownlink : boolean  =  false ;
 
     /**
-     * 每个连接的内部缓存大小。单位为 kB。当值为 0 时，内部缓存被禁用
-     * 
-     * 默认值 (V2Ray 4.4+):
-     * * 在 ARM、MIPS、MIPSLE 平台上，默认值为 0。
-     * * 在 ARM64、MIPS64、MIPS64LE 平台上，默认值为 4。
-     * * 在其它平台上，默认值为 512。
-     * 
-     * 默认值 (V2Ray 4.3-):
-     * * 在 ARM、MIPS、MIPSLE、ARM64、MIPS64、MIPS64LE 平台上，默认值为 16。
-     * * 在其它平台上，默认值为 2048。
+     * Internal cache size per connection. The unit is kB. When the value is 0, the internal cache is disabled
+     *
+     * Default value (V2Ray 4.4+):
+     * * On ARM, MIPS, MIPSLE platforms, the default value is 0.
+     * * On ARM64, MIPS64, MIPS64LE platforms, the default value is 4.
+     * * On other platforms, the default is 512.
+     *
+     * Default (V2Ray 4.3-):
+     * * On ARM, MIPS, MIPSLE, ARM64, MIPS64, MIPS64LE platforms, the default value is 16.
+     * * On other platforms, the default is 2048.
      */
     bufferSize: number = 512;
 }
 
 /**
- * V2Ray 系统的策略
- */
+* The strategy of V2Ray system
+*/
 class SystemPolicyObject {
-    /** 当值为 true 时，开启所有入站代理的上行流量统计 */
+    /** When the value is true, enable the uplink traffic statistics of all inbound proxies*/
     statsInboundUplink: boolean = false;
 
-    /** 当值为 true 时，开启所有入站代理的下行流量统计 */
+    /** When the value is true, enable the downlink traffic statistics of all inbound proxies*/
     statsInboundDownlink: boolean = false;
 
-    /** （ V2Ray 4.26.0+ ）当值为 true 时，开启所有出站代理的上行流量统计 */
-    statsOutboundUplink: boolean = false;
+    /** ( V2Ray 4.26.0+ ) When the value is true, enable the uplink traffic statistics of all outbound proxies*/
+    statsOutboundUplink : boolean  =  false ;
 
-    /** （ V2Ray 4.26.0+ ） 当值为 true 时，开启所有出站代理的下行流量统计 */
-    statsOutboundDownlink: boolean = false;
+    /** ( V2Ray 4.26.0+ ) When the value is true, enable the downlink traffic statistics of all outbound proxies*/
+    statsOutboundDownlink : boolean  =  false ;
 }
 
 export { PolicyObject, LevelPolicyObject, SystemPolicyObject };
