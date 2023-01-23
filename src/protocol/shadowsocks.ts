@@ -1,4 +1,4 @@
-/** Shadowsocks 加密方法 */
+/** Shadowsocks encryption method */
 const enum SHADOWSOCKS_METHOD {
     aes_256_gcm = "aes-256-gcm",
     aes_128_gcm = "aes-128-gcm",
@@ -7,35 +7,35 @@ const enum SHADOWSOCKS_METHOD {
     none = "none"
 }
 
-/** Shadowssocks 可接收的网络连接类型 */
+/** Shadowssocks acceptable network connection types */
 const enum SHADOWSOCKS_NETWORK {
     tcp = "tcp",
     udp = "udp",
     tcp_udp = "tcp,udp"
 }
 
-/** Shadowsocks 入站配置 */
+/** Shadowsocks inbound configuration */
 class ShadowsocksInboundObject {
-    /** 邮件地址，用于标识用户 */
+    /** Email address, used to identify the user */
     email: string;
 
-    /** 加密方法 */
+    /** encryption method */
     method: SHADOWSOCKS_METHOD;
 
-    /** 密码 */
+    /** password*/
     password: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
-    /** 可接收的网络连接类型 */
+    /** Acceptable network connection types */
     network: SHADOWSOCKS_NETWORK = SHADOWSOCKS_NETWORK.tcp;
 
     /**
      * ShadowsocksInboundObject
-     * @param email 邮件地址
-     * @param password 密码
-     * @param method 加密方式
+     * @param email email address
+     * @param password password
+     * @param method encryption method
      */
     constructor(email: string, password: string, method: SHADOWSOCKS_METHOD) {
         this.email = email;
@@ -44,33 +44,33 @@ class ShadowsocksInboundObject {
     }
 }
 
-/** Shadowsocks 服务器配置 */
-class ShadowsocksServerObject {
-    /** 邮件地址，用于标识用户 */
+/** Shadowsocks server configuration */
+class  ShadowsocksServerObject  {
+    /** Email address, used to identify the user */
     email: string;
 
-    /** 服务器地址，支持 IPv4、IPv6 和域名 */
+    /** Server address, supports IPv4, IPv6 and domain names */
     address: string;
 
-    /** 服务器端口 */
+    /** server port */
     port: number;
 
-    /** 加密方法 */
+    /** encryption method */
     method: SHADOWSOCKS_METHOD;
 
-    /** 密码 */
+    /** password*/
     password: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
      * ShadowsocksServerObject
-     * @param email 邮件地址
-     * @param address Shadowsocks 服务器地址，支持 IPv4、IPv6 和域名
-     * @param port Shadowsocks 服务器端口
-     * @param password 密码
-     * @param method 加密方式
+     * @param email email address
+     * @param address Shadowsocks server address, supports IPv4, IPv6 and domain name
+     * @param port Shadowsocks server port
+     * @param password password
+     * @param method encryption method
      */
     constructor(email: string, address: string, port: number, password: string, method: SHADOWSOCKS_METHOD) {
         this.email = email;
@@ -81,14 +81,14 @@ class ShadowsocksServerObject {
     }
 }
 
-/** Shadowsocks 出站配置 */
+/** Shadowsocks outbound configuration */
 class ShadowsocksOutboundObject {
-    /** 服务器列表 */
+    /** server list*/
     servers: ShadowsocksServerObject[];
 
     /**
      * ShadowsocksOutboundObject
-     * @param servers Shadowsocks服务
+     * @param servers Shadowsocks service
      */
     constructor(servers: ShadowsocksServerObject | ShadowsocksServerObject[]) {
         if (servers instanceof ShadowsocksServerObject) servers = [servers];
