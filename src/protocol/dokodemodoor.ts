@@ -9,42 +9,53 @@ const enum DOKODEMODOOR_NETWORK {
  * Dokodemo door（任意门）是一个入站数据协议
  * 它可以监听一个本地端口，并把所有进入此端口的数据发送至指定服务器的一个端口，从而达到端口映射的效果
  */
+/** Acceptable network protocol types */
+const enum DOKODEMODOOR_NETWORK {
+    tcp = "tcp",
+    udp = "udp",
+    tcp_udp = "tcp,udp"
+}
+
+/**
+* Dokodemo door is an inbound data protocol
+* It can listen to a local port and send all the data entering this port to a port of the specified server, so as to achieve the effect of port mapping
+*/
 class DokodemodoorInboundObject {
     /**
-     * 将流量转发到此地址
-     * 
-     * 可以是一个 IP 地址，形如 "1.2.3.4"，或者一个域名，形如 "v2ray.com"
-     * 
-     * 当 followRedirect（见下文）为 true 时，address 可为空
+     * Forward traffic to this address
+     *
+     * It can be an IP address, like "1.2.3.4", or a domain name, like "v2ray.com"
+     *
+     * address can be null when followRedirect (see below) is true
      */
     address: string;
 
-    /** 将流量转发到目标地址的指定端口，范围 [1, 65535]，数值类型 */
+    /** Forward traffic to the specified port of the target address, range [1, 65535], value type*/
     port: number;
 
-    /** 可接收的网络协议类型。比如当指定为 `tcp` 时，任意门仅会接收 TCP 流量 */
-    network: DOKODEMODOOR_NETWORK = DOKODEMODOOR_NETWORK.tcp;
+    /** Acceptable network protocol types. For example, when specified as `tcp`, any door will only receive TCP traffic*/
+    network : DOKODEMODOOR_NETWORK  =  DOKODEMODOOR_NETWORK . tcp ;
 
-    /** 入站数据的时间限制（秒），默认值为 300 */
+    /** Time limit (seconds) for inbound data, the default value is 300 */
     timeout: number = 300;
 
-    /** 
-     * 当值为 `true` 时，dokodemo-door 会识别出由 iptables 转发而来的数据，并转发到相应的目标地址。
-     * 
-     * 详见[传输配置](https://www.v2fly.org/config/transport.html)
+    /**
+     * When the value is `true`, dokodemo-door will identify the data forwarded by iptables and forward it to the corresponding target address.
+     *
+     * See [Transport Configuration](https://www.v2fly.org/config/transport.html) for details
      */
     followRedirect: boolean = false;
 
     /**
-     * 用户等级，所有连接都会使用这个用户等级
+     * User level, all connections will use this user level
      */
     userLevel: number = 0;
 
     /**
      * DokodemodoorInboundObject
-     * @param address 将流量转发到此地址
-     * @param port 将流量转发到目标地址的指定端口
-     * @param userLevel 用户等级(可选)
+     * @param address forward traffic to this address
+     * @param port forward traffic to the specified port of the target address
+     * @param userLevel user level (optional)
      */
     constructor(address: string, port: number) {
         this.address = address;
