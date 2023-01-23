@@ -2,40 +2,40 @@ import { PROTOCOL, StreamSettingsObject } from "../../lib";
 import { BlackholeOutboundObject, DnsOutboundObject, FreedomOutboundObject, HTTPOutboundObject, LoopbackOutboundObject, ShadowsocksOutboundObject, SocksOutboundObject, TrojanOutboundObject, VlessOutboundObject, VmessOutboundObject } from "../protocol";
 
 /**
- * 出站连接用于向远程网站或下一级代理服务器发送数据，可用的协议请见协议列表
- */
-class OutboundObject {
-    /** 用于发送数据的 IP 地址，当主机有多个 IP 地址时有效，默认值为 `"0.0.0.0"`*/
+* Outbound connections are used to send data to remote websites or next-level proxy servers. For available protocols, please refer to the protocol list
+*/
+class  OutboundObject  {
+    /** The IP address used to send data, it is valid when the host has multiple IP addresses, the default value is `"0.0.0.0"`*/
     sendThrough: string = "0.0.0.0";
 
-    /** 连接协议名称，可选的值见协议列表 */
+    /** Connection protocol name, see protocol list for optional values*/
     protocol: PROTOCOL;
 
-    /** 具体的配置内容，视协议不同而不同。详见每个协议中的 OutboundObject */
+    /** The specific configuration content varies depending on the protocol. See OutboundObject in each protocol for details */
     settings: BlackholeOutboundObject | DnsOutboundObject | FreedomOutboundObject | HTTPOutboundObject | LoopbackOutboundObject | ShadowsocksOutboundObject | SocksOutboundObject | TrojanOutboundObject | VlessOutboundObject | VmessOutboundObject;
 
-    /** 
-     * 此出站连接的标识，用于在其它的配置中定位此连接
-     * 
-     * 当其值不为空时，必须在所有 tag 中唯一
+    /**
+     * The identifier of this outbound connection, used to locate this connection in other configurations
+     *
+     * When its value is not empty, it must be unique among all tags
      */
     tag: string;
 
-    /** [底层传输配置](https://www.v2fly.org/config/transport.html#streamsettingsobject) */
+    /** [Underlying transport configuration](https://www.v2fly.org/config/transport.html#streamsettingsobject) */
     streamSettings: StreamSettingsObject = null;
 
-    /** 出站代理配置。当出站代理生效时，此出站协议的 streamSettings 将不起作用 */
+    /** Outbound proxy configuration. When the outbound proxy is in effect, the streamSettings for this outbound protocol will have no effect */
     proxySettings: ProxySettingsObject = null;
 
-    /** 多路复用（Mux）配置 */
+    /** Multiplexing (Mux) configuration */
     mux: MuxObject = null;
 
     /**
      * OutboundObject
-     * @param tag 此出站连接的标识
-     * @param protocol 连接协议名称
-     * @param settings 具体的配置内容
-     * @param mux 是否启用多路复用
+     * @param tag The identifier for this outbound connection
+     * @param protocol connection protocol name
+     * @param settings specific configuration content
+     * @param mux whether to enable multiplexing
      */
     constructor(
         tag: string,
@@ -52,25 +52,25 @@ class OutboundObject {
 }
 
 /**
- * 出站代理配置
- */
+* Outbound proxy configuration
+*/
 class ProxySettingsObject {
-    /** 当指定另一个出站连接的标识时，此出站连接发出的数据，将被转发至所指定的出站连接发出 */
+    /** When another outbound connection is specified, the data sent by this outbound connection will be forwarded to the specified outbound connection */
     tag: string;
 
     /**
-     * 是否启用传输层转发支持
-     * 
-     * 在启用后,此出站连接的传输层协议将保持生效（如果传输层协议支持）
-     * 
-     * 如果不启用此选项, 在转发时传输层协议将失效，只能使用默认的 TCP 传输协议
+     * Whether to enable transport layer forwarding support
+     *
+     * When enabled, the transport layer protocol for this outbound connection will remain in effect (if supported by the transport layer protocol)
+     *
+     * If this option is not enabled, the transport layer protocol will be invalid when forwarding, and only the default TCP transport protocol can be used
      */
     transportLayer: boolean;
 
     /**
      * ProxySettingsObject
-     * @param tag 另一个出站连接的标识
-     * @param transportLayer 是否启用传输层转发支持
+     * @param tag the identifier of another outbound connection
+     * @param transportLayer Whether to enable transport layer forwarding support
      */
     constructor(tag: string, transportLayer: boolean) {
         this.tag = tag;
@@ -78,20 +78,20 @@ class ProxySettingsObject {
     }
 }
 
-/** 
- * 多路复用配置
- */
+/**
+* Multiplexing configuration
+*/
 class MuxObject {
-    /** 是否启用 Mux 转发请求，默认值 `false` */
+    /** Whether to enable Mux forwarding request, the default value `false` */
     enable: boolean = false;
 
-    /** 
-     * 最大并发连接数。最小值 1，最大值 1024，默认值 8
-     * 
-     * 填负数，如 -1，不加载 mux 模块（v4.22.0+）
-     * 
-     * 这个数值表示了一个 TCP 连接上最多承载的 Mux 连接数量。
-     * 当客户端发出了 8 个 TCP 请求，而 concurrency=8 时，V2Ray 只会发出一条实际的 TCP 连接，客户端的 8 个请求全部由这个 TCP 连接传输 
+    /**
+     * Maximum number of concurrent connections. Minimum value 1, maximum value 1024, default value 8
+     *
+     * Fill in negative numbers, such as -1, do not load the mux module (v4.22.0+)
+     *
+     * This value indicates the maximum number of Mux connections carried by a TCP connection.
+     * When the client sends 8 TCP requests and concurrency=8, V2Ray will only send one actual TCP connection, and all 8 requests of the client will be transmitted by this TCP connection
      */
     concurrency: number = 8;
 }
