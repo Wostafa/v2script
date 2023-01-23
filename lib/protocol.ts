@@ -1,15 +1,15 @@
-/** 用户配置 */
+/** User configuration */
 class AccountObject {
-    /** 用户名 */
+    /** username*/
     user: string;
 
-    /** 密码 */
+    /** password*/
     pass: string;
 
     /**
      * AccountObject
-     * @param user 用户名
-     * @param pass 密码
+     * @param user username
+     * @param pass password
      */
     constructor(user: string, pass: string) {
         this.user = user;
