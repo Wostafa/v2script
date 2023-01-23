@@ -1,4 +1,4 @@
 /**
- * V2Ray 提供了一些关于其运行状况的统计信息
- */
+* V2Ray provides some statistics about its health
+*/
 export class StatsObject {}
