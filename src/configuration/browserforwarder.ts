@@ -1,15 +1,15 @@
-/** 浏览器转发模块可以使用浏览器网页页面转发受到支持的连接 */
+/** The browser forwarding module can use browser web pages to forward supported connections */
 export class BrowserForwarderObject {
-    /** 浏览器转发页面的本地监听地址 */
+    /** The local listening address of the browser forwarding page */
     listenAddr: string;
 
-    /** 浏览器转发页面的本地监听端口 */
+    /** The local listening port of the browser forwarding page */
     listenPort: number;
 
     /**
      * BrowserForwarderObject
-     * @param addr 浏览器转发页面的本地监听地址
-     * @param port 浏览器转发页面的本地监听端口
+     * @param addr The local listening address of the browser forwarding page
+     * @param port The local listening port of the browser forwarding page
      */
     constructor(addr: string, port: number) {
         this.listenAddr = addr;
