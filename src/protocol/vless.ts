@@ -1,21 +1,21 @@
 import { FallbackObject } from "../../lib";
 
-/** Vless 服务器配置 */
+/** Vless server configuration */
 class VlessServerObject {
-    /** 服务器地址 */
+    /** server address*/
     address: string;
 
-    /** 服务器端口 */
+    /** server port */
     port: number;
 
-    /** 用户列表 */
+    /** user list*/
     users: VlessUserObject[];
 
     /**
      * VlessServerObject
-     * @param address 服务器地址
-     * @param port 服务器端口
-     * @param users 用户配置
+     * @param address server address
+     * @param port server port
+     * @param users user configuration
      */
     constructor(address: string, port: number, users: VlessUserObject | VlessUserObject[]) {
         this.address = address;
@@ -26,34 +26,34 @@ class VlessServerObject {
     }
 }
 
-/** 用户配置 */
+/** User configuration */
 class VlessUserObject {
-    /** VLESS 的用户 ID，必须是一个合法的 UUID */
+    /** The user ID of VLESS must be a legal UUID */
     id: string;
 
-    /** 现阶段需要填 "none"，不能留空。 */
+    /** At this stage, "none" needs to be filled in and cannot be left blank. */
     encryption: "none" = "none";
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
      * VlessUserObject
-     * @param id VLESS 的用户 ID
+     * @param id VLESS user ID
      */
     constructor(id: string) {
         this.id = id;
     }
 }
 
-/** Vless 出站配置 */
+/** Vless outbound configuration */
 class VlessOutboundObject {
-    /** 服务器列表 */
+    /** server list*/
     vnext: VlessServerObject[];
 
     /**
      * VlessOutboundObject
-     * @param servers 服务器配置
+     * @param servers server configuration
      */
     constructor(servers: VlessServerObject | VlessServerObject[]) {
         if (servers instanceof VlessServerObject) servers = [servers];
@@ -61,21 +61,21 @@ class VlessOutboundObject {
     }
 }
 
-/** Vless 客户端配置 */
+/** Vless client configuration */
 class VlessClientObject {
-    /** VLESS 的用户 ID，必须是一个合法的 UUID */
+    /** The user ID of VLESS must be a legal UUID */
     id: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
-    /** 用户邮箱，用于区分不同用户的流量 */
+    /** User mailbox, used to distinguish the traffic of different users*/
     email: string;
 
     /**
      * VlessClientObject
-     * @param id VLESS 的用户 ID
-     * @param email 用户邮箱
+     * @param id VLESS user ID
+     * @param email user email
      */
     constructor(id: string, email: string) {
         this.id = id;
@@ -83,18 +83,18 @@ class VlessClientObject {
     }
 }
 
-/** Vless 入站配置 */
+/** Vless inbound configuration */
 class VlessInboundObject {
-    /** 客户端列表 */
+    /** Client List*/
     clients: VlessClientObject[];
 
-    /** 回落分流列表 */
+    /** Fallback shunt list */
     fallbacks: FallbackObject[];
 
     /**
      * VlessInboundObject
-     * @param clients 客户端列表
-     * @param fallbacks 回落分流列表
+     * @param clients client list
+     * @param fallbacks Fallback fallback list
      */
     constructor(clients: VlessClientObject | VlessClientObject[], fallbacks: FallbackObject | FallbackObject[]) {
         if (clients instanceof VlessClientObject) clients = [clients];
