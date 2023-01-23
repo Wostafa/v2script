@@ -1,19 +1,19 @@
 /**
- * 当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效
- * 
- * gRPC 使用 HTTP/2 协议传输，内置连接复用（mux）功能
- */
+* The gRPC configuration of the current connection, only valid when this connection uses gRPC
+*
+* gRPC uses HTTP/2 protocol transmission, built-in connection multiplexing (mux) function
+*/
 export class grpcObject {
-    /** gRPC 服务的名称。其作用类似 path 的功能，用于防止探测是否部署了本传输协议。建议使用复杂的随机字符串。
-     * 
-     * 根据[ gRPC 规范官方](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md#appendix-a---grpc-for-protobuf)规定，
-     * 此字段不建议使用除英文大小写字母、数字、下划线及英文句号之外的字符组成。 
+    /** The name of the gRPC service. Its function is similar to that of path, which is used to prevent detection of whether this transport protocol is deployed. A complex random string is recommended.
+     *
+     * According to the [gRPC specification official](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md#appendix-a---grpc-for-protobuf),
+     * It is not recommended to use characters other than English uppercase and lowercase letters, numbers, underscores and English periods in this field.
      */
     serviceName: string;
 
     /**
      * grpcObject
-     * @param serviceName gRPC 服务的名称
+     * @param serviceName the name of the gRPC service
      */
     constructor(serviceName: string) {
         this.serviceName = serviceName;
