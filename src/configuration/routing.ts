@@ -1,47 +1,47 @@
 /**
- * V2Ray 内建了一个路由模块，可以将入站数据按需求由不同的出站连接发出，以达到按需代理的目的
- * 
- * 这一功能的常见用法是分流国内外流量,
- * V2Ray 可以通过内部机制判断不同国家或地区的流量，然后将它们发送到不同的出站代理
- */
+* V2Ray has a built-in routing module, which can send inbound data through different outbound connections according to needs, so as to achieve the purpose of on-demand proxy
+*
+* The common use of this function is to divert domestic and foreign traffic,
+* V2Ray can judge the traffic of different countries or regions through the internal mechanism, and then send them to different outbound proxies
+*/
 class RoutingObject {
     /**
-     * 域名解析策略
-     * * AsIs：只使用域名进行路由选择，默认值；
-     * * IPIfNonMatch：当域名没有匹配任何基于域名的规则时，将域名解析成 IP（A 记录或 AAAA 记录），进行基于 IP 规则的匹配；
-     * 当一个域名有多个 IP 地址时，会尝试匹配所有的 IP 地址，直到其中一个与某个 IP 规则匹配为止；
-     * 解析后的 IP 仅在路由选择时起作用，转发的数据包中依然使用原始域名。
-     * * IPOnDemand：当匹配时碰到任何基于 IP 的规则，立即将域名解析为 IP 进行匹配。
+     * Domain name resolution strategy
+     * * AsIs: Only use the domain name for routing, the default value;
+     * * IPIfNonMatch: When the domain name does not match any domain-based rules, resolve the domain name to IP (A record or AAAA record) for IP-based rule matching;
+     * When a domain name has multiple IP addresses, it will try to match all IP addresses until one of them matches an IP rule;
+     * The resolved IP only works in routing, and the original domain name is still used in the forwarded data packets.
+     * * IPOnDemand: When any IP-based rule is encountered during matching, immediately resolve the domain name to IP for matching.
      */
     domainStrategy: DOMAIN_STRATEGY = DOMAIN_STRATEGY.AsIs;
 
     /**
-     * 选择要使用的域名匹配算法。
-     * * linear：使用线性匹配算法，默认值；
-     * * mph：使用最小完美散列（minimal perfect hash）算法（v4.36.1+）
+     * Select the domain name matching algorithm to use.
+     * * linear: use linear matching algorithm, the default value;
+     * * mph: use the minimal perfect hash algorithm (v4.36.1+)
      */
     domainMatcher: DOMAIN_MATCHER = DOMAIN_MATCHER.linear;
 
     /**
-     * 对应一个数组，数组中每一项是一个规则
-     * 
-     * 对于每一个连接，路由将根据这些规则依次进行判断，当一个规则生效时，
-     * 即将这个连接转发至它所指定的 outboundTag（或 balancerTag，V2Ray 4.4+）
-     * 
-     * 当没有匹配到任何规则时，流量默认被转发至第一个 outbound
+     * corresponds to an array, each item in the array is a rule
+     *
+     * For each connection, routing will judge according to these rules in turn. When a rule takes effect,
+     * Forward this connection to its designated outboundTag (or balancerTag, V2Ray 4.4+)
+     *
+     * When no rule is matched, traffic is forwarded to the first outbound by default
      */
     rules: RuleObject[] = [];
 
     /**
-     * 一个数组，数组中每一项是一个负载均衡器的配置
-     * 
-     * 当一个规则指向一个负载均衡器时，V2Ray 会通过此负载均衡器选出一个 outbound，然后由它转发流量
+     * An array, each item in the array is the configuration of a load balancer
+     *
+     * When a rule points to a load balancer, V2Ray will select an outbound through this load balancer, and then it will forward the traffic
      */
     balancers: BalancerObject[] = [];
 
     /**
      * RoutingObject
-     * @param domainStrategy 域名解析策略
+     * @param domainStrategy domain name resolution strategy
      */
     constructor(domainStrategy: DOMAIN_STRATEGY) {
         this.domainStrategy = domainStrategy;
@@ -49,13 +49,13 @@ class RoutingObject {
 }
 
 /**
- * 域名解析策略
- * * AsIs：只使用域名进行路由选择，默认值；
- * * IPIfNonMatch：当域名没有匹配任何基于域名的规则时，将域名解析成 IP（A 记录或 AAAA 记录），进行基于 IP 规则的匹配；
- * 当一个域名有多个 IP 地址时，会尝试匹配所有的 IP 地址，直到其中一个与某个 IP 规则匹配为止；
- * 解析后的 IP 仅在路由选择时起作用，转发的数据包中依然使用原始域名。
- * * IPOnDemand：当匹配时碰到任何基于 IP 的规则，立即将域名解析为 IP 进行匹配。
- */
+* Domain name resolution strategy
+* * AsIs: Only use the domain name for routing, the default value;
+* * IPIfNonMatch: When the domain name does not match any domain-based rules, resolve the domain name to IP (A record or AAAA record) for IP-based rule matching;
+* When a domain name has multiple IP addresses, it will try to match all IP addresses until one of them matches an IP rule;
+* The resolved IP only works in routing, and the original domain name is still used in the forwarded data packets.
+* * IPOnDemand: When any IP-based rule is encountered during matching, immediately resolve the domain name to IP for matching.
+*/
 const enum DOMAIN_STRATEGY {
     AsIs = "AsIs",
     IPIfNonMatch = "IPIfNonMatch",
@@ -63,159 +63,159 @@ const enum DOMAIN_STRATEGY {
 }
 
 /**
- * 选择要使用的域名匹配算法。
- * * linear：使用线性匹配算法，默认值；
- * * mph：使用最小完美散列（minimal perfect hash）算法（v4.36.1+）
- */
+* Select the domain name matching algorithm to use.
+* * linear: use linear matching algorithm, the default value;
+* * mph: use the minimal perfect hash algorithm (v4.36.1+)
+*/
 const enum DOMAIN_MATCHER {
     linear = "linear",
     mph = "mph"
 }
 
-/** 连接方式 */
+/** Connection method */
 const enum RULE_NETWORK {
     tcp = "tcp",
     udp = "udp",
     tcp_udp = "tcp,udp"
 }
 
-/** 协议 */
+/** protocol */
 const enum RULE_PROTOCOL {
     http = "http",
     tls = "tls",
     bittorrent = "bittorrent"
 }
 
-/** 路由规则 */
+/** Routing rules */
 class RuleObject {
-    /** 
-     * 选择要使用的域名匹配算法。此处 domainMatcher 的优先级高于 RoutingObject 配置的 domainMatcher
-     * * linear：使用线性匹配算法，默认值；
-     * * mph：使用最小完美散列（minimal perfect hash）算法（v4.36.1+）
+    /**
+     * Select the domain name matching algorithm to use. Here the priority of domainMatcher is higher than the domainMatcher configured by RoutingObject
+     * * linear: use linear matching algorithm, the default value;
+     * * mph: use the minimal perfect hash algorithm (v4.36.1+)
      */
     domainMathcer: DOMAIN_MATCHER = DOMAIN_MATCHER.linear;
 
-    /** 目前只支持 field 这一个选项，因此其被设置为私有属性，不支持修改 */
+    /** Currently only supports the field option, so it is set as a private attribute and does not support modification*/
     private type: string = "field";
 
-    /** 
-     * 一个数组，数组每一项是一个域名的匹配
-     * 
-     * 有以下几种形式:
-     * * 纯字符串：当此字符串匹配目标域名中任意部分，该规则生效。
-     * 比如 `sina.com` 可以匹配 `sina.com`、`sina.com.cn`、`sina.company` 和 `www.sina.com`，但不匹配 `sina.cn`
-     * * 正则表达式：由 `regexp:` 开始，余下部分是一个正则表达式。
-     * 当此正则表达式匹配目标域名时，该规则生效。
-     * 例如 `regexp:\.goo.*\.com$` 匹配 `www.google.com`、`fonts.googleapis.com`，但不匹配 `google.com`
-     * * 子域名（推荐）：由 `domain:` 开始，余下部分是一个域名。
-     * 当此域名是目标域名或其子域名时，该规则生效。
-     * 例如 `domain:v2ray.com` 匹配 `www.v2ray.com`、`v2ray.com`，但不匹配 `xv2ray.com`
-     * * 完整匹配：由 `full:` 开始，余下部分是一个域名。
-     * 当此域名完整匹配目标域名时，该规则生效。
-     * 例如 `full:v2ray.com` 匹配 `v2ray.com` 但不匹配 `www.v2ray.com`
-     * * 预定义域名列表：由 `geosite:` 开头，余下部分是一个类别名称（域名列表）。
-     * 如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考[预定义域名列表](https://www.v2fly.org/config/routing.html#预定义域名列表)
-     * * 从文件中加载域名：形如 `ext:file:tag` ，必须以 `ext:` 开头，后面跟文件名和标签，文件存放在资源目录中，
-     * 文件格式与 `geosite.dat` 相同，标签必须在文件中存在
+    /**
+     * An array, each item of the array is a match of a domain name
+     *
+     * There are several forms:
+     * * Plain string: When this string matches any part of the target domain name, the rule takes effect.
+     * For example `sina.com` can match `sina.com`, `sina.com.cn`, `sina.company` and `www.sina.com`, but not `sina.cn`
+     * * Regular expression: starts with `regexp:`, the rest is a regular expression.
+     * When this regular expression matches the target domain name, the rule takes effect.
+     * For example `regexp:\.goo.*\.com$` matches `www.google.com`, `fonts.googleapis.com`, but not `google.com`
+     * * Subdomain name (recommended): start with `domain:`, the rest is a domain name.
+     * This rule takes effect when the domain name is the target domain name or its subdomain name.
+     * For example `domain:v2ray.com` matches `www.v2ray.com`, `v2ray.com`, but not `xv2ray.com`
+     * * Full match: start with `full:`, the rest is a domain name.
+     * This rule takes effect when the domain name fully matches the target domain name.
+     * For example `full:v2ray.com` matches `v2ray.com` but not `www.v2ray.com`
+     * * Predefined domain name list: starts with `geosite:`, and the rest is a category name (domain name list).
+     * Such as `geosite:google` or `geosite:cn`. Name and domain name list reference [predefined domain name list] (https://www.v2fly.org/config/routing.html#predefined domain name list)
+     * * Load a domain name from a file: in the form of `ext:file:tag`, it must start with `ext:`, followed by the file name and tag, and the file is stored in the resource directory.
+     * The file format is the same as `geosite.dat`, the label must exist in the file
      */
     domains: string[] = [];
 
     /**
-     * 一个数组，数组内每一项代表一个 IP 范围。当某一项匹配目标 IP 时，此规则生效。有以下几种形式：
-     * * IP：形如 127.0.0.1
-     * * [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 10.0.0.0/8
-     * * GeoIP：
-     *    * 形如 `geoip:cn` 为正向匹配，即为匹配「中国大陆 IP 地址」。后面跟双字符[国家或地区代码](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)，支持所有可以上网的国家和地区
-     *    * 形如 `geoip:!cn` 为反向匹配，即为匹配「非中国大陆 IP 地址」。后面跟双字符[国家或地区代码](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)，支持所有可以上网的国家和地区
-     *    * 特殊值：`geoip:private`（V2Ray 3.5+），包含所有私有地址，如 127.0.0.1
-     * * 从文件中加载 IP：
-     *    * 形如 `ext:file:tag` 和 `ext-ip:file:tag` 为正向匹配，即为匹配 「tag 内的 IP 地址」
-     *    * 形如 `ext:file:!tag` 和 `ext-ip:file:!tag` 为反向匹配，即为匹配「非 tag 内的 IP 地址」
-     *    * 必须以 `ext:` 或 `ext-ip:` 开头，后面跟文件名、标签或 !标签，文件存放在资源目录中，文件格式与 geoip.dat 相同，标签必须在文件中存在。    
+     * An array, each item in the array represents an IP range. This rule takes effect when an item matches the target IP. There are several forms:
+     * * IP: like 127.0.0.1
+     * * [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing):release 10.0.0.0/8
+     * * GeoIP:
+     * * The form of `geoip:cn` is a forward match, that is, it matches "IP address in mainland China". Followed by two characters [country or region code](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing), supports all countries and regions that can access the Internet
+     * * The form of `geoip:!cn` is a reverse match, that is, it matches a "non-mainland China IP address". Followed by two characters [country or region code](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing), supports all countries and regions that can access the Internet
+     * * Special value: `geoip:private` (V2Ray 3.5+), contains all private addresses, such as 127.0.0.1
+     * * Load IP from file:
+     * * Forms such as `ext:file:tag` and `ext-ip:file:tag` are forward matching, that is, matching "IP address in tag"
+     * * Forms such as `ext:file:!tag` and `ext-ip:file:!tag` are reverse matching, that is, matching "IP address not in the tag"
+     * * Must start with `ext:` or `ext-ip:`, followed by file name, label or ! label, the file is stored in the resource directory, the file format is the same as geoip.dat, and the label must exist in the file.    
      */
     ip: string[] = [];
 
     /**
-     * 目标端口范围，有三种形式：
-     * * a-b：a 和 b 均为正整数，且小于 65536。这个范围是一个前后闭合区间，当端口落在此范围内时，此规则生效
-     * * a：a 为正整数，且小于 65536。当目标端口为 a 时，此规则生效
-     * * （V2Ray 4.18+）以上两种形式的混合，以逗号 "," 分隔。形如：53,443,1000-2000。
+     * Destination port range, there are three forms:
+     * * ab: a and b are both positive integers and less than 65536. This range is a closed interval before and after. When the port falls within this range, this rule takes effect
+     * * a: a is a positive integer and less than 65536. This rule takes effect when the destination port is a
+     * * (V2Ray 4.18+) A mixture of the above two forms, separated by a comma ",". Such as: 53,443,1000-2000.
      */
     port: number | string;
 
-    /** 来源端口范围，格式同 `port` */
+    /** Source port range, same format as `port` */
     sourcePort: number | string;
 
-    /** 当连接方式是指定的方式时，此规则生效 */
+    /** When the connection mode is specified, this rule takes effect*/
     network: RULE_NETWORK;
 
-    /** 
-     * 一个数组，数组内每一项代表一个 IP 范围，形式有 IP、CIDR、GeoIP 和从文件中加载 IP
-     * 
-     * 当某一项匹配来源 IP 时，此规则生效 
+    /**
+     * An array, each item in the array represents an IP range, in the form of IP, CIDR, GeoIP and load IP from file
+     *
+     * When an item matches the source IP, this rule takes effect
      */
     source: string[] = [];
 
-    /** 
-     * 一个数组，数组内每一项是一个邮箱地址
-     * 
-     * 当某一项匹配来源用户时，此规则生效
-     * 
-     * 当前 Shadowsocks 和 VMess 支持此规则。
+    /**
+     * An array, each item in the array is an email address
+     *
+     * When an item matches the source user, this rule takes effect
+     *
+     * Currently Shadowsocks and VMess support this rule.
      */
     user: string[] = [];
 
     /**
-     * 一个数组，数组内每一项是一个标识
-     * 
-     * 当某一项匹配入站协议的标识时，此规则生效
+     * An array, each item in the array is an identifier
+     *
+     * This rule takes effect when an item matches the identifier of the inbound protocol
      */
     inboundTag: string[];
 
     /**
-     * 一个数组，数组内每一项表示一种协议
-     * 
-     * 当某一个协议匹配当前连接的流量时，此规则生效
-     * 
-     * 必须开启入站代理中的 sniffing 选项
+     * An array, each item in the array represents a protocol
+     *
+     * This rule takes effect when a certain protocol matches the traffic of the current connection
+     *
+     * The sniffing option in the inbound proxy must be turned on
      */
     protocol: RULE_PROTOCOL[];
 
     /**
-     * （V2Ray 4.18+）一段脚本，用于检测流量的属性值。当此脚本返回真值时，此规则生效
-     * 
-     * 脚本语言为 [Starlark](https://github.com/bazelbuild/starlark)，它的语法是 Python 的子集。脚本接受一个全局变量 attrs，其中包含了流量相关的属性
-     * 
-     * 目前只有 HTTP 入站代理会设置这一属性
-     * 
-     * 示例：
-     * * 检测 HTTP GET：attrs[':method'] == 'GET'
-     * * 检测 HTTP Path：attrs[':path'].startswith('/test')
-     * * 检测 Content Type：attrs['accept'].index('text/html') >= 0
+     * (V2Ray 4.18+) A script used to detect the attribute value of traffic. This rule takes effect when this script returns true
+     *
+     * The scripting language is [Starlark](https://github.com/bazelbuild/starlark), and its syntax is a subset of Python. The script accepts a global variable attrs, which contains traffic-related attributes
+     *
+     * Currently only HTTP inbound proxies will set this property
+     *
+     * Example:
+     * * Detect HTTP GET: attrs[':method'] == 'GET'
+     * * detect HTTP Path：attrs[':path'].startswith('/test')
+     * * detect Content Type：attrs['accept'].index('text/html') >= 0
      */
     attrs: string = "";
 
-    /** 对应一个额外 出站连接配置 的标识 */
+    /** Corresponds to the flag of an additional outbound connection configuration */
     outboundTag: string;
 
-    /** 
-     * 对应一个负载均衡器的标识
-     * 
-     * balancerTag 和 outboundTag 须二选一
-     * 
-     * 当同时指定时，outboundTag 生效 
+    /**
+     * Corresponds to the identifier of a load balancer
+     *
+     * balancerTag and outboundTag must be selected
+     *
+     * When specified at the same time, outboundTag takes effect
      */
     balancerTag: string;
 
     /**
      * RuleObject
-     * @param network 连接方式，其值为 RULE_NETWORK 枚举值
-     * @param protocol 一个数组，数组内每一项表示一种协议
-     * @param port 目标端口范围
-     * @param sourcePort 来源端口范围
-     * @param inboundTag 一个数组，数组内每一项是一个标识
-     * @param outboundTag 对应一个额外出站连接配置的标识
-     * @param balancerTag 对应一个负载均衡器的标识
+     * @param network connection method, its value is RULE_NETWORK enumeration value
+     * @param protocol An array, each item in the array represents a protocol
+     * @param port target port range
+     * @param sourcePort source port range
+     * @param inboundTag An array, each item in the array is a tag
+     * @param outboundTag corresponds to an additional outbound connection configuration identifier
+     * @param balancerTag corresponds to the identifier of a load balancer
      */
     constructor(network: RULE_NETWORK, protocol: RULE_PROTOCOL[], port: number | string, sourcePort: number | string, inboundTag: string[], outboundTag: string, balancerTag: string) {
         this.network = network;
@@ -228,36 +228,36 @@ class RuleObject {
     }
 }
 
-/** 进行负载均衡的策略对象 */
+/** Policy object for load balancing */
 const enum BALANCER_STRATEGY {
     random = "random",
     leastPing = "leastPing"
 }
 
-/** 负载均衡器 */
+/** load balancer */
 class BalancerObject {
-    /** 
-     * 此负载均衡器的标识
-     * 
-     * 用于匹配 RuleObject 中的 balancerTag 
+    /**
+     * The identity of this load balancer
+     *
+     * Used to match the balancerTag in RuleObject
      */
     tag: string;
 
     /**
-     * 一个字符串数组，其中每一个字符串将用于和出站协议标识的前缀匹配
-     * 
-     * 在以下几个出站协议标识中：`[ "a", "ab", "c", "ba" ]`，`"selector": ["a"]` 将匹配到 `[ "a", "ab" ]`
+     * An array of strings, each of which will be used to match the prefix identified by the outbound protocol
+     *
+     * In the following outbound protocol identifiers: `[ "a", "ab", "c", "ba" ]`, `"selector": ["a"]` will match `[ "a" , "ab" ]`
      */
     selector: string[];
 
-    /** 进行负载均衡的策略对象 */
+    /** Policy object for load balancing */
     strategy: { type: BALANCER_STRATEGY };
 
     /**
      * BalancerObject
-     * @param tag 此负载均衡器的标识
-     * @param selector 一个字符串数组，其中每一个字符串将用于和出站协议标识的前缀匹配
-     * @param strategy_type 进行负载均衡的策略对象
+     * @param tag The identifier of this load balancer
+     * @param selector An array of strings, each of which will be used to match the prefix identified by the outbound protocol
+     * @param strategy_type the strategy object for load balancing
      */
     constructor(tag: string, selector: string[], strategy_type: BALANCER_STRATEGY) {
         this.tag = tag;
