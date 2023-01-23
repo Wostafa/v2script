@@ -1,20 +1,20 @@
 import { FallbackObject } from "../../lib";
 
-/** Trojan 客户端配置 */
+/** Trojan client configuration */
 class TrojanClientObject {
-    /** 密码 */
+    /** password*/
     password: string;
 
-    /** 邮件地址，用于标识用户 */
+    /** Email address, used to identify the user */
     email: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
      * TrojanClientObject
-     * @param email 邮件地址
-     * @param password 密码
+     * @param email email address
+     * @param password password
      */
     constructor(email: string, password: string) {
         this.password = password;
@@ -22,29 +22,29 @@ class TrojanClientObject {
     }
 }
 
-/** Trojan 服务器配置 */
+/** Trojan server configuration */
 class TrojanServerObject {
-    /** 服务器地址，支持 IPv4、IPv6 和域名 */
+    /** Server address, supports IPv4, IPv6 and domain names */
     address: string;
 
-    /** 服务器端口 */
+    /** server port */
     port: number;
 
-    /** 邮件地址，用于标识用户 */
+    /** Email address, used to identify the user */
     email: string;
 
-    /** 密码 */
+    /** password*/
     password: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
      * TrojanServerObject
-     * @param address 服务器地址
-     * @param port 服务器端口
-     * @param email 邮件地址
-     * @param password 密码
+     * @param address server address
+     * @param port server port
+     * @param email email address
+     * @param password password
      */
     constructor(address: string, port: number, email: string, password: string) {
         this.address = address;
@@ -54,18 +54,18 @@ class TrojanServerObject {
     }
 }
 
-/** Trojan 入站配置 */
+/** Trojan inbound configuration */
 class TrojanInboundObject {
-    /** 客户端列表 */
+    /** Client List*/
     clients: TrojanClientObject[];
 
-    /** 回落分流列表 */
+    /** Fallback shunt list */
     fallbacks: FallbackObject[];
 
     /**
      * TrojanInboundObject
-     * @param clients 客户端列表
-     * @param fallbacks 回落分流列表
+     * @param clients client list
+     * @param fallbacks Fallback fallback list
      */
     constructor(clients: TrojanClientObject | TrojanClientObject[], fallbacks: FallbackObject | FallbackObject[]) {
         if (clients instanceof TrojanClientObject) clients = [clients];
@@ -76,14 +76,14 @@ class TrojanInboundObject {
     }
 }
 
-/** Trojan 出站配置 */
+/** Trojan outbound configuration */
 class TrojanOutboundObject {
-    /** 服务器列表 */
+    /** server list*/
     servers: TrojanServerObject[];
 
     /**
      * TrojanOutboundObject
-     * @param servers 服务器配置
+     * @param servers server configuration
      */
     constructor(servers: TrojanServerObject | TrojanServerObject[]) {
         if (servers instanceof TrojanServerObject) servers = [servers];
