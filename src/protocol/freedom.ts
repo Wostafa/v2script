@@ -1,8 +1,8 @@
 /**
- * 在目标地址为域名时，Freedom 可以直接向此域名发出连接（"AsIs"），或者将域名解析为 IP 之后再建立连接（"UseIP"、"UseIPv4" 和 "UseIPv6"）
- *
- * 解析 IP 的步骤会使用 V2Ray 内建的 DNS
- */
+* When the target address is a domain name, Freedom can directly send a connection to this domain name ("AsIs"), or establish a connection after resolving the domain name to IP ("UseIP", "UseIPv4" and "UseIPv6")
+*
+* The step of resolving IP will use V2Ray's built-in DNS
+*/
 const enum FREEDOM_STRATEGY {
     AsIs = "AsIs",
     UseIP = "UseIP",
@@ -11,32 +11,32 @@ const enum FREEDOM_STRATEGY {
 }
 
 /**
- * Freedom 是一个出站协议，可以用来向任意网络发送（正常的） TCP 或 UDP 数据
- */
+* Freedom is an outbound protocol that can be used to send (normal) TCP or UDP data to any network
+*/
 class FreedomOutboundObject {
     /**
-     * 在目标地址为域名时，Freedom 可以直接向此域名发出连接（"AsIs"），或者将域名解析为 IP 之后再建立连接（"UseIP"、"UseIPv4" 和 "UseIPv6"）
-     * 
-     * 解析 IP 的步骤会使用 V2Ray 内建的 DNS
+     * When the target address is a domain name, Freedom can directly send a connection to this domain name ("AsIs"), or establish a connection after resolving the domain name to IP ("UseIP", "UseIPv4" and "UseIPv6")
+     *
+     * The step of resolving IP will use V2Ray's built-in DNS
      */
     domainStrategy: FREEDOM_STRATEGY = FREEDOM_STRATEGY.AsIs;
 
-    /** 
-     * Freedom 会强制将所有数据发送到指定地址（而不是入站协议指定的地址）
-     * 
-     * 其值为一个字符串，样例：`127.0.0.1:80`，`:1234`。当地址不指定时，如 `:443`，Freedom 不会修改原先的目标地址
-     * 
-     * 当端口为 0 时，如 `v2ray.com: 0`，Freedom 不会修改原先的端口
+    /**
+     * Freedom will force all data to be sent to the specified address (instead of the address specified by the inbound protocol)
+     *
+     * Its value is a string, example: `127.0.0.1:80`, `:1234`. When the address is not specified, such as `:443`, Freedom will not modify the original target address
+     *
+     * When the port is 0, such as `v2ray.com: 0`, Freedom will not modify the original port
      */
     redirect: string;
 
-    /** 用户等级，所有连接都使用这一等级 */
+    /** User level, all connections use this level */
     userLevel: string;
 
     /**
      * FreedomOutboundObject
-     * @param redirect Freedom 会强制将所有数据发送到指定地址
-     * @param userLevel 用户等级
+     * @param redirect Freedom will force all data to be sent to the specified address
+     * @param userLevel user level
      */
     constructor(redirect: string, userLevel?:string) {
         this.redirect = redirect;
