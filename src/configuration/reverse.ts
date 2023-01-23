@@ -1,24 +1,24 @@
-/** 反向代理是一个 V2Ray 的附加功能，可以把服务器端的流量向客户端转发，即逆向流量转发 */
+/** Reverse proxy is an additional function of V2Ray, which can forward the server-side traffic to the client, that is, reverse traffic forwarding*/
 class ReverseObject {
-    /** 一个数组，每一项表示一个 bridge */
+    /** An array, each item represents a bridge */
     bridges: BridgeObject[] = [];
 
-    /** 一个数组，每一项表示一个 portal */
+    /** An array, each item represents a portal */
     portals: PortalObject[] = [];
 }
 
 /** bridge */
 class BridgeObject {
-    /** 一个标识，所有由 bridge 发出的连接，都会带有这个标识。可以在 路由 中使用 inboundTag 进行识别 */
+    /** An identifier, all connections sent by the bridge will carry this identifier. You can use inboundTag in routing for identification */
     tag: string;
 
-    /** 一个域名。bridge 向 portal 建立的连接，都会使用这个域名进行发送。这个域名只作为 bridge 和 portal 的通信用途，不必真实存在 */
+    /** A domain name. The connection established by the bridge to the portal will be sent using this domain name. This domain name is only used for communication between bridge and portal, and does not have to exist */
     domain: string;
     
     /**
      * BridgeObject
-     * @param tag 标识
-     * @param domain 域名
+     * @param tag identification
+     * @param domain domain name
      */
     constructor(tag: string, domain: string) {
         this.tag = tag;
@@ -28,16 +28,16 @@ class BridgeObject {
 
 /** portal */
 class PortalObject {
-    /** portal 的标识。在 路由 中使用 outboundTag 将流量转发到这个 portal */
+    /** The identity of the portal. Use outboundTag in routing to forward traffic to this portal */
     tag: string;
 
-    /** 一个域名。当 portal 接收到流量时，如果流量的目标域名是此域名，则 portal 认为当前连接上 bridge 发来的通信连接。而其它流量则会被当成需要转发的流量。portal 所做的工作就是把这两类连接进行识别并拼接 */
+    /** A domain name. When the portal receives traffic, if the target domain name of the traffic is this domain name, the portal considers the communication connection sent by the bridge on the current connection. Other traffic will be treated as traffic that needs to be forwarded. What the portal does is to identify and splice these two types of connections*/
     domain: string;
 
     /**
      * BridgeObject
-     * @param tag 标识
-     * @param domain 域名
+     * @param tag identification
+     * @param domain domain name
      */
     constructor(tag: string, domain: string) {
         this.tag = tag;
