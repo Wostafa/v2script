@@ -1,65 +1,65 @@
 /**
- * V2Ray 内建了一个 DNS 组件
- * 
- * 其主要用途为：对目标地址（域名）进行 DNS 解析，同时为 IP 路由规则匹配提供判断依据
- */
+* V2Ray has a built-in DNS component
+*
+* Its main purpose is to perform DNS resolution on the target address (domain name), and provide judgment basis for IP routing rule matching
+*/
 class DnsObject {
     /**
-     * 域名与地址的映射，
-     * 其值可为「域名与单个地址」的映射、「域名与多个地址（地址数组）的映射」(v4.37.3+)，其中地址可以是 IP 或域名
-     * 
-     * 在解析域名时，如果域名匹配这个列表中的某一项，当该项的地址为 IP 时，则解析结果为该项的 IP，而不会进行后续的 DNS 解析
-     * 
-     * 当该项的地址为域名时，会使用此域名进行后续的 DNS 解析，而不使用原始域名
+     * Mapping of domain names and addresses,
+     * Its value can be the mapping of "domain name and single address", "mapping of domain name and multiple addresses (address array)" (v4.37.3+), where the address can be IP or domain name
+     *
+     * When resolving the domain name, if the domain name matches an item in this list, when the address of the item is IP, the resolution result is the IP of the item, and no subsequent DNS resolution will be performed
+     *
+     * When the address of this item is a domain name, this domain name will be used for subsequent DNS resolution instead of the original domain name
      */
     hosts: Object;
 
-    /** DNS 服务器列表，有效的写法有两种：DNS 地址（字符串形式）和 DnsServerObject */
+    /** DNS server list, there are two valid writing methods: DNS address (string format) and DnsServerObject */
     servers: (string | DnsServerObject)[];
 
-    /** 当前网络的 IP 地址。用于 DNS 查询时通知 DNS 服务器，客户端所在的地理位置（不能是私有 IP 地址） */
+    /** The IP address of the current network. When used for DNS query, notify the DNS server of the geographic location of the client (not a private IP address) */
     clientIp: string;
 
-    /** 
-     * DNS 查询所使用的网络类型。默认值为 UseIP，即 DNS 同时查询域名的 A 和 AAAA 记录
-     * 
-     * UseIPv4 和 UseIPv6 分别为只查询 A 记录、只查询 AAAA 记录
+    /**
+     * The type of network to use for DNS queries. The default value is UseIP, that is, DNS queries the A and AAAA records of the domain name at the same time
+     *
+     * UseIPv4 and UseIPv6 are for querying only A records and only querying AAAA records respectively
      */
     queryStrategy: QUERY_STRATEGY = QUERY_STRATEGY.UseIP;
 
-    /** 
-     * 禁用 DNS 缓存。默认为 `false`，即为不禁用
-     * 
-     * 此属性为私有属性，不允许直接进行调用，如需修改属性值请通过 `cache()` 方法进行修改
+    /**
+     * Disable DNS caching. The default is `false`, that is, not disabled
+     *
+     * This attribute is a private attribute and cannot be called directly. If you need to modify the attribute value, please use the `cache()` method to modify it
      */
     private disableCache: boolean = false;
 
     /**
-     * 禁用 DNS 回退（fallback）查询。默认为 `false`，即为不禁用
+     * Disable DNS fallback (fallback) queries. The default is `false`, that is, not disabled
      *
-     * 此属性为私有属性，不允许直接进行调用，如需修改属性值请通过 `fallback()` 方法进行修改
+     * This attribute is a private attribute and cannot be called directly. If you need to modify the attribute value, please use the `fallback()` method to modify it
      */
     private disableFallback: boolean = false;
 
     /**
-     *  禁用在 DNS 服务器的优先匹配域名列表命中时执行 DNS 回退（fallback）查询
+     * Disable performing a DNS fallback query when the DNS server's priority matching domain name list hits
      *
-     * 此属性为私有属性，不允许直接进行调用，如需修改属性值请通过 `fallbackIfMatch()` 方法进行修改
+     * This attribute is a private attribute and cannot be called directly. If you need to modify the attribute value, please use the `fallbackIfMatch()` method to modify it
      */
     private disableFallbackIfMatch: boolean = false;
 
-    /** 
-     * 由此 DNS 发出的查询流量，除 localhost 和 DOHL_ 模式外，都会带有此标识，可在路由使用 inboundTag 进行匹配
-     * 
-     * 其默认值为 `"dns"`
+    /**
+     * The query traffic sent by this DNS, except localhost and DOHL_ mode, will have this identifier, which can be matched by using inboundTag in routing
+     *
+     * Its default value is `"dns"`
      */
     tag: string = "dns";
 
     /**
      * DnsObject
-     * @param host 域名与地址的映射
-     * @param servers DNS 服务器列表
-     * @param clientIp 当前网络的 IP 地址
+     * @param host domain name and address mapping
+     * @param servers DNS server list
+     * @param clientIp IP address of the current network
      */
     constructor(host: Map<string, string | string[]>, servers: (string | DnsServerObject)[], clientIp: string) {
         this.hosts = Object.fromEntries(host.entries());
@@ -68,9 +68,9 @@ class DnsObject {
     }
 
     /**
-     * 设置DNS缓存是否开启
-     * @param status DNS缓存状态，其值为 `disable` | `enable`
-     * @returns 当前对象
+     * Set whether the DNS cache is enabled
+     * @param status DNS cache status, its value is `disable` | `enable`
+     * @returns current object
      */
     cache(status: "disable" | "enable"): DnsObject {
         if (status === "disable") this.disableCache = true;
@@ -79,9 +79,9 @@ class DnsObject {
     }
 
     /**
-     * 设置DNS回退查询是否开启
-     * @param status DNS回退查询状态，其值为 `disable` | `enable`
-     * @returns 当前对象
+     * Set whether DNS fallback query is enabled
+     * @param status DNS fallback query status, its value is `disable` | `enable`
+     * @returns current object
      */
     fallback(status: "disable" | "enable"): DnsObject {
         if (status === "disable") this.disableFallback = true;
@@ -90,9 +90,9 @@ class DnsObject {
     }
 
     /**
-     * 设置在DNS服务器的优先匹配域名列表命中时执行DNS回退查询
-     * @param status 回退查询状态，其值为 `disable` | `enable`
-     * @returns 当前对象
+     * Set to perform DNS fallback query when the priority matching domain name list of the DNS server is hit
+     * @param status Rollback query status, its value is `disable` | `enable`
+     * @returns current object
      */
     fallbackIfMatch(status: "disable" | "enable"): DnsObject {
         if (status === "disable") this.disableFallbackIfMatch = true;
@@ -102,58 +102,58 @@ class DnsObject {
 }
 
 /**
- * DNS 服务器对象
- */
+* DNS server object
+*/
 class DnsServerObject {
-    /** DNS 服务器地址，如 `8.8.8.8`、`tcp+local://8.8.8.8:53` 和 `https://dns.google/dns-query` 等 */
+    /** DNS server address, such as `8.8.8.8`, `tcp+local://8.8.8.8:53` and `https://dns.google/dns-query`, etc. */
     address: string;
 
     /**
-     * DNS 服务器端口，如 `53`
-     * 
-     * 此项缺省时默认为 `53`
-     * 
-     * 当使用 DOH、DOHL、DOQL 模式时，该项无效
-     * 
-     * 非标准端口应在 URL 中指定
+     * DNS server port, such as `53`
+     *
+     * This item defaults to `53` by default
+     *
+     * This item is invalid when using DOH, DOHL, DOQL mode
+     *
+     * Non-standard ports should be specified in the URL
      */
     port: number;
 
     /**
-     * 当前网络的 IP 地址
-     * 
-     * 用于 DNS 查询时通知 DNS 服务器，客户端所在的地理位置（不能是私有 IP 地址）
-     * 
-     * 此处 `clientIp` 的优先级高于外层配置的 `clientIp`，由此可实现「使用不同的 clientIp 从相同的 DNS 服务器获取同一域名在不同地区的解析结果」
+     * The IP address of the current network
+     *
+     * When used for DNS query, notify the DNS server of the geographic location of the client (not a private IP address)
+     *
+     * The priority of `clientIp` here is higher than `clientIp` configured in the outer layer, so that "use different clientIp to obtain the resolution results of the same domain name in different regions from the same DNS server"
      */
     clientIp: string;
 
     /**
-     * 在 DNS 回退（fallback）查询过程中，是否跳过本 DNS
-     * 
-     * 默认为 false，即为不跳过
+     * In the process of DNS fallback (fallback) query, whether to skip this DNS
+     *
+     * The default is false, that is, do not skip
      */
     skipFallback: boolean = false;
 
     /**
-     * 一个域名列表，此列表包含的域名，将优先使用此服务器进行查询
-     * 
-     * 域名格式和路由配置中相同
+     * A list of domain names, the domain names contained in this list will use this server first for query
+     *
+     * The domain name format is the same as in the routing configuration
      */
     domains: string[] = [];
 
     /**
-     * 一个 IP 范围列表，格式和路由配置中相同
-     * 
-     * 当配置此项时，V2Ray DNS 会对返回的 IP 进行校验，只返回满足 expectIPs 列表的地址。如果未配置此项，会原样返回 IP 地址
+     * A list of IP ranges in the same format as in routing configuration
+     *
+     * When this option is configured, V2Ray DNS will verify the returned IP, and only return the address that satisfies the list of expectIPs. If this is not configured, the IP address will be returned unchanged
      */
     expectIPs: string[] = [];
 
     /**
      * DnsServerObject
-     * @param address DNS 服务器地址
-     * @param port DNS 服务器端口
-     * @param clientIp 当前网络的 IP 地址
+     * @param address DNS server address
+     * @param port DNS server port
+     * @param clientIp IP address of the current network
      */
     constructor(address: string, port: number, clientIp: string) {
         this.address = address;
@@ -163,10 +163,10 @@ class DnsServerObject {
 }
 
 /**
- * DNS 查询所使用的网络类型。默认值为 UseIP，即 DNS 同时查询域名的 A 和 AAAA 记录
- *
- * UseIPv4 和 UseIPv6 分别为只查询 A 记录、只查询 AAAA 记录
- */
+* The type of network to use for DNS queries. The default value is UseIP, that is, DNS queries the A and AAAA records of the domain name at the same time
+*
+* UseIPv4 and UseIPv6 are for querying only A records and only querying AAAA records respectively
+*/
 const enum QUERY_STRATEGY {
     UseIP = "UseIP",
     UseIPv4 = "UseIPv4",
