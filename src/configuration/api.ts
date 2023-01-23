@@ -1,23 +1,23 @@
 /**
- * V2Ray 中可以开放一些 API 以便远程调用
+* Some APIs can be opened in V2Ray for remote calling
  * 
- * 这些 API 都基于 [gRPC](https://grpc.io/),
- * 大多数用户并不会用到此 API，新手可以直接忽略这一项
- * 
- * 当远程控制开启时，V2Ray 会自建一个出站代理，以 tag 配置的值为标识,
- * 用户必须手动将所有的 gRPC 入站连接通过 路由 指向这一出站代理
+* These APIs are based on [gRPC](https://grpc.io/),
+* Most users will not use this API, novices can directly ignore this item
+*
+* When the remote control is enabled, V2Ray will build an outbound proxy by itself, marked with the value of the tag configuration,
+* Users must manually route all gRPC inbound connections to this outbound proxy
  */
 class ApiObject {
-    /** 出站代理标识 */
+    /** Outbound proxy ID */
     tag: string = "api";
 
-    /** 开启的 API 列表 */
+    /** Enabled API list */
     private services: ApiService[] = [];
 
     /**
-     * 开启 API 服务
-     * @param service 需要开启的 API 服务，其值为 ApiService 类型值或数组
-     * @returns 当前对象
+     * Open the API service
+     * @param service The API service that needs to be opened, its value is an ApiService type value or an array
+     * @returns current object
      */
     open(service: ApiService | ApiService[]): ApiObject {
         if (typeof (service) === "string") {
@@ -39,9 +39,9 @@ class ApiObject {
     }
 
     /**
-     * 关闭 API 服务
-     * @param service 需要关闭的 API 服务，其值为 ApiService 类型值或数组
-     * @returns 当前对象
+     * Close the API service
+     * @param service The API service that needs to be closed, its value is an ApiService type value or an array
+     * @returns current object
      */
     close(service: ApiService | ApiService[]): ApiObject {
         if (typeof (service) === "string") {
@@ -59,23 +59,23 @@ class ApiObject {
     }
 }
 
-/** 支持的 API 列表 */
+/** List of supported APIs */
 const enum ApiService {
     /** 
-     * 一些对于入站出站代理进行修改的 API，可用的功能如下
-     * * 添加一个新的入站代理
-     * * 添加一个新的出站代理
-     * * 删除一个现有的入站代理
-     * * 删除一个现有的出站代理
-     * * 在一个入站代理中添加一个用户（仅支持 VMess、VLESS、Trojan）
-     * * 在一个入站代理中删除一个用户（仅支持 VMess、VLESS、Trojan）
+     * Some APIs that are modified for inbound and outbound proxies, the available functions are as follows
+     * * Add a new inbound proxy
+     * * Add a new outbound proxy
+     * * Delete an existing inbound proxy
+     * * Delete an existing outbound proxy
+     * * Add a user in an inbound proxy (only supports VMess, VLESS, Trojan)
+     * * Delete a user in an inbound proxy (only supports VMess, VLESS, Trojan)
      */
     HandlerService = "HandlerService",
-    /** 支持对内置 Logger 的重启，可配合 logrotate 进行一些对日志文件的操作 */
+    /** Support the restart of the built-in Logger, and can cooperate with logrotate to perform some operations on log files*/
     LoggerService = "LoggerService",
-    /** 内置的数据统计服务 */
+    /** Built-in data statistics service */
     StatsService = "StatsService",
-    /** 连接观测组件 API (v4.38.0+) */
+    /** Connect Observation API (v4.38.0+) */
     ObservatoryService = "ObservatoryService"
 }
 
