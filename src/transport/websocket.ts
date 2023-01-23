@@ -1,53 +1,53 @@
 /**
- * 当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效
- * 
- * 使用标准的 WebSocket 来传输数据。WebSocket 连接可以被其它 HTTP 服务器（如 Nginx）分流，也可以被 VLESS fallbacks path 分流
- */
+* The WebSocket configuration of the current connection, only valid when this connection uses WebSocket
+*
+* Use standard WebSocket to transfer data. WebSocket connections can be diverted by other HTTP servers (such as Nginx) or by VLESS fallbacks path
+*/
 export class WebSocketObject {
     /**
-     * v4.27.1+，仅用于 inbound，是否接收 PROXY protocol
+     * v4.27.1+, only for inbound, whether to receive PROXY protocol
      *
-     * 填写 true 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭
+     * When filling in true, after the bottom TCP connection is established, the requester must first send PROXY protocol v1 or v2, otherwise the connection will be closed
      *
-     * [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt)专用于传递请求的真实来源 IP 和端口，
-     * 若你不了解它，请先忽略该项
+     * [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is dedicated to passing the real source IP and port of the request,
+     * If you don't understand it, please ignore this item
      *
-     * 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它
+     * Common anti-generation software (such as HAProxy, Nginx) can be configured to send it, and VLESS fallbacks xver can also send it
      */
     acceptProxyProtocol: boolean = false;
 
-    /** WebSocket 所使用的 HTTP 协议路径 */
+    /** HTTP protocol path used by WebSocket */
     path: string = "/";
 
-    /** 自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串 */
+    /** Custom HTTP header, a key-value pair, each key represents the name of an HTTP header, and the corresponding value is a string */
     headers: any = null;
 
-    /** 
-     * 所要发送的前置数据的最长长度。用于减少连接建立的时间(v4.37.0+)
-     * 
-     * 数据会以 Base64 RawURLEncoding 的形式附加在 path 之后，转发时需要根据前缀进行匹配
-     * 
-     * 如果设置 earlyDataHeaderName 则会将前置数据放置于该 HTTP 头(v4.39.0+)
-     * 
-     * 对于接收端，设置为任何非 0 数值都代表启用前置数据支持
+    /**
+     * The maximum length of preamble data to be sent. Used to reduce connection establishment time (v4.37.0+)
+     *
+     * The data will be appended to the path in the form of Base64 RawURLEncoding, and it needs to be matched according to the prefix when forwarding
+     *
+     * If earlyDataHeaderName is set, the pre-data will be placed in the HTTP header (v4.39.0+)
+     *
+     * For the receiving end, setting it to any non-zero value means enabling pre-data support
      */
     maxEarlyData: number = 1024;
 
     /**
-     * 是否启用浏览器转发
-     * 
-     * 如果启用浏览器转发，相应的 WebSockets 连接就会经过浏览器转发模块进行转发后再发送至互联网(v4.37.0+)
-     * 
-     * v4.37.0+ 服务器端程序会自动适配客户端的浏览器转发功能，无需额外设置
-     * 
-     * 只兼容基于基于路径的前置数据或者 HTTP 头的名字为 `Sec-WebSocket-Protocol` 的启用基于 HTTP 头的前置数据
+     * Whether to enable browser forwarding
+     *
+     * If browser forwarding is enabled, the corresponding WebSockets connection will be forwarded by the browser forwarding module and then sent to the Internet (v4.37.0+)
+     *
+     * The v4.37.0+ server-side program will automatically adapt to the browser forwarding function of the client without additional settings
+     *
+     * Only compatible with path-based prefixes or HTTP header-based prefixes whose name is `Sec-WebSocket-Protocol`
      */
     useBrowserForwarding: boolean = false;
 
     /**
-     * 发送的前置数据的 HTTP 头的名字，设置后启用基于 HTTP 头的前置数据。如果留空则使用基于路径的前置数据(v4.39.0+)
-     * 
-     * 当且仅当 HTTP 头的名字为 `Sec-WebSocket-Protocol` 时可以启用基于 HTTP 头的前置数据浏览器转发功能
+     * The name of the HTTP header of the pre-data sent. After setting, the pre-data based on the HTTP header is enabled. If left blank use path-based prefix data (v4.39.0+)
+     *
+     * If and only if the name of the HTTP header is `Sec-WebSocket-Protocol`, the browser forwarding function based on the HTTP header can be enabled
      */
     earlyDataHeaderName: string = "";
 }
