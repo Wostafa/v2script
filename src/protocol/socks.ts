@@ -1,20 +1,20 @@
 import { AccountObject } from "../../lib";
 
-/** 用户配置 */
+/** User configuration */
 class SocksUserObject {
-    /** 用户名 */
+    /** username*/
     user: string;
 
-    /** 密码 */
+    /** password*/
     pass: string;
 
-    /** 用户等级 */
+    /** user level*/
     level: number = 0;
 
     /**
      * SocksUserObject
-     * @param user 用户名
-     * @param pass 密码
+     * @param user username
+     * @param pass password
      */
     constructor(user: string, pass: string) {
         this.user = user;
@@ -22,21 +22,21 @@ class SocksUserObject {
     }
 }
 
-/** Socks 服务器配置 */
-class SocksServerObject {
-    /** 服务器地址 */
+/** Socks server configuration */
+class  SocksServerObject  {
+    /** server address*/
     address: string;
 
-    /** 服务器端口 */
+    /** server port */
     port: number;
 
-    /** 用户列表 */
+    /** user list*/
     users: SocksUserObject[] = [];
 
     /**
      * ServerObject
-     * @param address 服务器地址
-     * @param port 服务器端口
+     * @param address server address
+     * @param port server port
      */
     constructor(address: string, port: number) {
         this.address = address;
@@ -44,17 +44,17 @@ class SocksServerObject {
     }
 }
 
-/** Socks 出站配置 */
+/** Socks outbound configuration */
 class SocksOutboundObject {
-    /** 服务器列表 */
+    /** server list*/
     servers: SocksServerObject[];
 
-    /** Socks 版本 */
+    /** Socks version */
     version: "5" | "4a" | "4";
 
     /**
      * SocksOutbound
-     * @param version Socks 协议版本
+     * @param version Socks protocol version
      */
     constructor(version: "5" | "4a" | "4", servers: SocksServerObject | SocksServerObject[]) {
         this.version = version;
@@ -64,47 +64,47 @@ class SocksOutboundObject {
     }
 }
 
-/** Socks 认证方法 */
+/** Socks authentication method */
 const enum SOCKS_AUTH {
-    /** 不认证 */
+    /** Do not authenticate */
     noauth = "noauth",
 
-    /** 密码认证 */
+    /** Password authentication*/
     password = "password"
 }
 
-/** Socks 入站配置 */
+/** Socks inbound configuration */
 class SocksInboundObject {
-    /** 认证方法 */
+    /** authentication method */
     auth: SOCKS_AUTH = SOCKS_AUTH.noauth;
 
     /**
-     * 一个数组，数组中每个元素为一个用户帐号
-     * 此选项仅当 auth 为 password 时有效。 
+     * An array, each element in the array is a user account
+     * This option is only valid when auth is password.
      */
     accounts: AccountObject[] = null;
 
-    /** 是否开启 UDP 协议的支持 */
+    /** Whether to enable UDP protocol support */
     udp: boolean = false;
 
-    /** 
-     * SOCKS5 通过 UDP ASSOCIATE 命令建立 UDP 会话。服务端在对客户端发来的该命令的回复中，指定客户端发包的目标地址
-     * 
-     * v4.34.0+: 默认值为空，此时对于通过本地回环 IPv4/IPv6 连接的客户端，
-     * 回复对应的回环 IPv4/IPv6 地址；对于非本机的客户端，回复当前入站的监听地址
-     * 
-     * v4.33.0 及更早版本: 默认值 127.0.0.1。
-     * 你可以通过配置此项使 V2Ray 固定回复你配置的地址。如果你不知道此项的作用，留空即可
+    /**
+     * SOCKS5 establishes a UDP session through the UDP ASSOCIATE command. In the reply to the command sent by the client, the server specifies the destination address of the client sending the packet
+     *
+     * v4.34.0+: The default value is empty, at this time, for clients connected through local loopback IPv4/IPv6,
+     * Reply the corresponding loopback IPv4/IPv6 address; for non-local clients, reply the current inbound listening address
+     *
+     * v4.33.0 and earlier: Default value 127.0.0.1.
+     * You can make V2Ray always reply to the address you configured by configuring this item. If you don't know what this item does, just leave it blank
      */
     ip: string = null;
 
-    /** 用户等级 */
+    /** user level*/
     userLevel: number = 0;
 
     /**
      * SocksInboundObject
-     * @param auth 认证方法
-     * @param account 用户列表
+     * @param auth authentication method
+     * @param account user list
      */
     constructor(auth?: SOCKS_AUTH, account?: AccountObject | AccountObject[]) {
         this.auth = auth || this.auth;
