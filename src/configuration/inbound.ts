@@ -2,13 +2,13 @@ import { PROTOCOL, StreamSettingsObject } from "../../lib";
 import { DokodemodoorInboundObject, HTTPInboundObject, ShadowsocksInboundObject, SocksInboundObject, TrojanInboundObject, VlessInboundObject, VmessInboundObject } from "../protocol";
 
 /**
- * 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标
- *
- * fakedns+others 选项会优先进行 FakeDNS 虚拟 DNS 服务器匹配。
- * 如果 IP 地址处于虚拟 DNS 服务器的 IP 地址区间内，但是没有找到相应的域名记录时，使用 http、tls 的匹配结果。
- *
- * 此选项仅在 metadataOnly 为 false 时有效。(v4.38.0+)
- */
+* When the traffic is of the specified type, reset the destination of the current connection by the destination address included in it
+*
+* The fakedns+others option will give priority to FakeDNS virtual DNS server matching.
+* If the IP address is within the IP address range of the virtual DNS server, but no corresponding domain name record is found, use the matching results of http and tls.
+*
+* This option is only valid when metadataOnly is false. (v4.38.0+)
+*/
 const enum DESTOVERRIDE {
     http = "http",
     tls = "tls",
@@ -17,36 +17,36 @@ const enum DESTOVERRIDE {
 }
 
 /**
- * 尝试探测流量的类型
- */
+* try to detect the type of traffic
+*/
 class SniffingObject {
-    /** 是否开启流量探测 */
+    /** Whether to enable traffic detection */
     enable: boolean;
 
     /**
-     * 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标
-     * 
-     * fakedns+others 选项会优先进行 FakeDNS 虚拟 DNS 服务器匹配。
-     * 如果 IP 地址处于虚拟 DNS 服务器的 IP 地址区间内，但是没有找到相应的域名记录时，使用 http、tls 的匹配结果。
-     * 
-     * 此选项仅在 metadataOnly 为 false 时有效。(v4.38.0+)
+     * When the traffic is of the specified type, reset the destination of the current connection by the destination address included in it
+     *
+     * The fakedns+others option will give priority to FakeDNS virtual DNS server matching.
+     * If the IP address is within the IP address range of the virtual DNS server, but no corresponding domain name record is found, use the matching results of http and tls.
+     *
+     * This option is only valid when metadataOnly is false. (v4.38.0+)
      */
-    destOverride: DESTOVERRIDE;
+    destOverride : DESTOVERRIDE ;
 
     /**
-     * 是否仅使用元数据推断目标地址而不截取流量内容。只有元数据流量目标侦测模块会被激活。
-     * 
-     * 如果关闭仅使用元数据推断目标地址，客户端必须先发送数据，代理服务器才会实际建立连接
-     * 
-     * 此行为与需要服务器首先发起第一个消息的协议如 SMTP 协议不兼容。
+     * Whether to use only metadata to infer destination addresses without intercepting traffic content. Only the metadata traffic object detection module will be activated.
+     *
+     * If only use metadata to infer destination address is turned off, the client must send data before the proxy server will actually establish a connection
+     *
+     * This behavior is incompatible with protocols such as SMTP that require the server to initiate the first message first.
      */
     metadataOnly: boolean;
 
     /**
      * SniffingObject
-     * @param enable 是否开启流量探测
-     * @param destOverride 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标
-     * @param metadataOnly 是否仅使用元数据推断目标地址而不截取流量内容
+     * @param enable Whether to enable traffic detection
+     * @param destOverride When the traffic is the specified type, reset the destination of the current connection according to the destination address included in it
+     * @param metadataOnly Whether to use metadata only to infer destination address without intercepting traffic content
      */
     constructor(enable: boolean, destOverride: DESTOVERRIDE, metadataOnly: boolean) {
         this.enable = enable;
@@ -56,39 +56,39 @@ class SniffingObject {
 }
 
 /**
- * 端口分配策略。
- *
- * * "always" 表示总是分配所有已指定的端口，port 中指定了多少个端口，V2Ray 就会监听这些端口
- * * "random" 表示随机开放端口，每隔 refresh 分钟在 port 范围中随机选取 concurrency 个端口来监听
- */
+* Port allocation strategy.
+*
+* * "always" indicates that all specified ports are always assigned, and how many ports are specified in port, V2Ray will listen to these ports
+* * "random" means randomly open ports, and randomly select concurrency ports in the port range every refresh minute to listen
+*/
 const enum INBOUND_STRATEGY {
     always = "always",
     random = "random"
 }
 
 /**
- * 端口分配设置
- */
+* Port assignment settings
+*/
 class AllocateObject {
     /**
-     * 端口分配策略。
-     * 
-     * * "always" 表示总是分配所有已指定的端口，port 中指定了多少个端口，V2Ray 就会监听这些端口
-     * * "random" 表示随机开放端口，每隔 refresh 分钟在 port 范围中随机选取 concurrency 个端口来监听
+     * Port allocation strategy.
+     *
+     * * "always" indicates that all specified ports are always assigned, and how many ports are specified in port, V2Ray will listen to these ports
+     * * "random" means randomly open ports, and randomly select concurrency ports in the port range every refresh minute to listen
      */
     strategy: INBOUND_STRATEGY;
 
-    /** 随机端口刷新间隔，单位为分钟。最小值为 2，建议值为 5。这个属性仅当 strategy = random 时有效。 */
+    /** Random port refresh interval, in minutes. The minimum value is 2, and the recommended value is 5. This property is only valid when strategy = random. */
     refresh: number;
 
-    /** 随机端口数量。最小值为 1，最大值为 `port` 范围的三分之一。建议值为 3。 */
+    /** Random port number. The minimum value is 1, and the maximum value is one-third of the `port` range. The recommended value is 3. */
     concurrency: number;
 
     /**
      * AllocateObject
-     * @param strategy 端口分配策略
-     * @param refresh 随机端口刷新间隔，单位为分钟
-     * @param concurrency 随机端口数量
+     * @param strategy port allocation strategy
+     * @param refresh Random port refresh interval, in minutes
+     * @param concurrency random port number
      */
     constructor(strategy: INBOUND_STRATEGY, refresh: number, concurrency: number) {
         this.strategy = strategy;
@@ -98,58 +98,58 @@ class AllocateObject {
 }
 
 /**
- * 入站连接用于接收从客户端（浏览器或上一级代理服务器）发来的数据，可用的协议请见协议列表
- */
+* The inbound connection is used to receive data sent from the client (browser or upper-level proxy server). Please refer to the protocol list for available protocols
+*/
 class InboundObject {
     /**
-     * 监听地址，只允许 IP 地址，默认值为 "0.0.0.0"，表示接收所有网卡上的连接。
-     * 除此之外，必须指定一个现有网卡的地址
-     * 
-     * v4.32.0+，支持填写 Unix domain socket，格式为绝对路径，形如 "/dev/shm/domain.socket"，
-     * 可在开头加 "@" 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，
-     * "@@" 则代表带 padding 的 abstract
-     * 
-     * 填写 Unix domain socket 时，port 和 allocate 将被忽略，协议暂时可选 VLESS、VMess、Trojan，
-     * 传输方式可选 TCP、WebSocket、HTTP/2
+     * Listening address, only IP addresses are allowed, the default value is "0.0.0.0", which means receiving connections from all network cards.
+     * In addition, the address of an existing network card must be specified
+     *
+     * v4.32.0+, support to fill in Unix domain socket, the format is an absolute path, like "/dev/shm/domain.socket",
+     * You can add "@" at the beginning to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html),
+     * "@@" stands for abstract with padding
+     *
+     * When filling in the Unix domain socket, port and allocate will be ignored, and the protocol can temporarily choose VLESS, VMess, Trojan,
+     * The transmission method can choose TCP, WebSocket, HTTP/2
      */
     listen: string = "0.0.0.0";
 
-    /** 端口。接受的格式如下:
-     * * 整型数值：实际的端口号
-     * * 环境变量：以 "env:" 开头，后面是一个环境变量的名称，如 "env:PORT"。V2Ray 会以字符串形式解析这个环境变量
-     * * 字符串：可以是一个数值类型的字符串，如 "1234"；或者一个数值范围，如 "5-10" 表示端口 5 到端口 10，这 6 个端口
-     * * 当只有一个端口时，V2Ray 会在此端口监听入站连接。当指定了一个端口范围时，取决于 allocate 设置。 
+    /** port. Accepted formats are as follows:
+     * * Integer value: the actual port number
+     * * Environment variable: start with "env:", followed by the name of an environment variable, such as "env:PORT". V2Ray will parse this environment variable as a string
+     * * String: It can be a string of numeric types, such as "1234"; or a range of values, such as "5-10" means port 5 to port 10, these 6 ports
+     * * When there is only one port, V2Ray will listen for incoming connections on this port. When a port range is specified, depends on the allocate setting.
      */
     port: number | string;
 
-    /** 连接协议名称，可选的值见[协议列表](https://www.v2fly.org/config/overview.html) */
+    /** Connection protocol name, see [protocol list](https://www.v2fly.org/config/overview.html) for optional values ​​*/
     protocol: PROTOCOL;
 
-    /** 具体的配置内容，视协议不同而不同。详见每个协议中的 `InboundObject` */
+    /** The specific configuration content varies depending on the protocol. See `InboundObject` in each protocol for details */
     settings: DokodemodoorInboundObject | HTTPInboundObject | ShadowsocksInboundObject | SocksInboundObject | TrojanInboundObject | VlessInboundObject | VmessInboundObject;
 
-    /** [底层传输配置](https://www.v2fly.org/config/transport.html#streamsettingsobject) */
+    /** [Underlying transport configuration](https://www.v2fly.org/config/transport.html#streamsettingsobject) */
     streamSettings: StreamSettingsObject = null;
 
-    /** 尝试探测流量的类型 */
+    /** Try to detect the type of traffic */
     sniffing: SniffingObject = null;
 
-    /** 端口分配设置 */
+    /** Port allocation settings */
     allocate: AllocateObject = null;
 
-    /** 此入站连接的标识，用于在其它的配置中定位此连接。当其不为空时，其值必须在所有 tag 中唯一 */
+    /** The identifier of this inbound connection, used to locate this connection in other configurations. When it is not empty, its value must be unique among all tags */
     tag: string;
 
     /**
      * InboundObject
-     * @param tag 此入站连接的标识，用于在其它的配置中定位此连接
-     * @param listen 监听地址，只允许 IP 地址
-     * @param port 端口
-     * @param protocol 连接协议名称
-     * @param settings 配置内容
-     * @param streamSettings 底层传输配置
-     * @param sniffing 尝试探测流量的类型
-     * @param allocate 端口分配设置
+     * @param tag The identifier of this inbound connection, used to locate this connection in other configurations
+     * @param listen listen address, only IP address is allowed
+     * @param port port
+     * @param protocol connection protocol name
+     * @param settings configuration content
+     * @param streamSettings underlying transmission configuration
+     * @param sniffing the type of traffic to try to sniff
+     * @param allocate port allocation settings
      */
     constructor(tag: string, listen: string, port: number | string, protocol: PROTOCOL, settings: DokodemodoorInboundObject | HTTPInboundObject | ShadowsocksInboundObject | SocksInboundObject | TrojanInboundObject | VlessInboundObject | VmessInboundObject) {
         this.listen = listen;
