@@ -1,19 +1,19 @@
-/** 虚拟 DNS 服务器 */
+/** Virtual DNS server */
 export class FakeDnsObject {
-    /** FakeDNS 分配 IP 的地址空间。由 FakeDNS 分配的地址会符合这个 CIDR 表达式 */
+    /** FakeDNS allocates IP address space. Addresses assigned by FakeDNS will match this CIDR expression */
     ipPool: string;
 
-    /** 
-     * FakeDNS 所记忆的「IP - 域名映射」数量。
-     * 
-     * 当域名数量超过此数值时，会依据 [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) 规则淘汰老旧域名 
+    /**
+     * The number of "IP-domain name mapping" remembered by FakeDNS.
+     *
+     * When the number of domain names exceeds this value, old domain names will be eliminated according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) rules
      */
     poolSize: number;
 
     /**
      * FakeDnsObject
-     * @param ipPool FakeDNS 分配 IP 的地址空间
-     * @param poolSize FakeDNS 所记忆的「IP - 域名映射」数量
+     * @param ipPool FakeDNS assigns IP address space
+     * @param poolSize The number of "IP-domain name mapping" remembered by FakeDNS
      */
     constructor(ipPool: string, poolSize: number) {
         this.ipPool = ipPool;
