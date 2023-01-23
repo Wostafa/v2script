@@ -1,13 +1,13 @@
 /**
- * Loopback 是一个出站协议，可使出站连接被重新路由
- */
+* Loopback is an outbound protocol that enables outbound connections to be rerouted
+*/
 export class LoopbackOutboundObject {
-    /** 匹配入站来源的标识 */
+    /** match the ID of the inbound source */
     inboundTag: string;
 
     /**
      * LoopbackOutboundObject
-     * @param inboundTag 匹配入站来源的标识
+     * @param inboundTag matches the ID of the inbound source
      */
     constructor(inboundTag: string) {
         this.inboundTag = inboundTag;
