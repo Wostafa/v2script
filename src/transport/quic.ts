@@ -1,6 +1,6 @@
 import { HEADER_OBJECT } from "../../lib";
 
-/** QUIC 加密方法 */
+/** QUIC encryption method */
 const enum QUIC_SECURITY {
     none = "none",
     aes_128_gcm = "aes-128-gcm",
@@ -8,27 +8,27 @@ const enum QUIC_SECURITY {
 }
 
 /**
- * QUIC 全称 Quick UDP Internet Connection，是由 Google 提出的使用 UDP 进行多路并发传输的协议。其主要优势是:
- * * 减少了握手的延迟（1-RTT 或 0-RTT）
- * * 多路复用，并且没有 TCP 的阻塞问题
- * * 连接迁移，（主要是在客户端）当由 Wifi 转移到 4G 时，连接不会被断开。
- */
+* The full name of QUIC is Quick UDP Internet Connection, which is a protocol proposed by Google that uses UDP for multi-channel concurrent transmission. Its main advantages are:
+* * Reduced handshake latency (1-RTT or 0-RTT)
+* * Multiplexing, and no TCP blocking problem
+* * Connection migration, (mainly on the client side) when transferring from Wifi to 4G, the connection will not be disconnected.
+*/
 class QUICObject {
     /**
-     * 加密方式。默认值为不加密
-     * 
-     * 此加密是对 QUIC 数据包的加密，加密后数据包无法被探测
+     * Encryption. The default is no encryption
+     *
+     * This encryption is the encryption of QUIC data packets, and the encrypted data packets cannot be detected
      */
     security: QUIC_SECURITY = QUIC_SECURITY.none;
 
-    /** 
-     * 加密时所用的密钥。可以是任意字符串 
-     * 
-     * 当 security 不为 `none` 时有效
+    /**
+     * The key used for encryption. can be any string
+     *
+     * Valid when security is not `none`
      */
     key: string = "";
 
-    /** 数据包头部伪装设置 */
+    /** Packet header masquerading settings */
     header: { type: HEADER_OBJECT } = { type: HEADER_OBJECT.none };
 }
 
