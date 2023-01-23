@@ -37,49 +37,49 @@ import {
 
 /** v2ray */
 export class v2ray {
-    /** 日志配置，表示 V2Ray 如何输出日志 */
+    /** Log configuration, indicating how V2Ray outputs logs */
     log: LogObject = new LogObject();
 
-    /** 远程控制 */
+    /** remote control*/
     api: ApiObject = null;
 
-    /** 内置的 DNS 服务器，若此项不存在，则默认使用本机的 DNS 设置 */
+    /** Built-in DNS server, if this item does not exist, the DNS settings of this machine will be used by default*/
     dns: DnsObject = null;
 
-    /** 路由功能 */
+    /** Routing function */
     routing: RoutingObject = null;
 
-    /** 本地策略，可进行一些权限相关的配置 */
+    /** Local policy, some permission-related configurations can be performed */
     policy: PolicyObject = new PolicyObject();
 
-    /** 一个数组，每个元素是一个入站连接配置 */
+    /** An array, each element is an inbound connection configuration */
     inbounds: InboundObject[];
 
-    /** 一个数组，每个元素是一个出站连接配置。列表中的第一个元素作为主出站协议。当路由匹配不存在或没有匹配成功时，流量由主出站协议发出 */
+    /** An array, each element is an outbound connection configuration. The first element in the list acts as the primary outbound protocol. When the route match does not exist or no match is successful, the traffic is sent by the main outbound protocol*/
     outbounds: OutboundObject[];
 
-    /** 用于配置 V2Ray 如何与其它服务器建立和使用网络连接 */
+    /** Used to configure how V2Ray establishes and uses network connections with other servers*/
     transport: TransportObject = null;
 
-    /** 统计信息 */
+    /** Statistics*/
     stats: StatsObject = new StatsObject();
 
-    /** 反向代理 */
+    /** reverse proxy */
     reverse: ReverseObject = null;
 
-    /** 虚拟 DNS 服务器 */
+    /** Virtual DNS server */
     fakedns: FakeDnsObject[] = [];
 
-    /** 浏览器转发模块 */
+    /** Browser forwarding module */
     browserForwarder: BrowserForwarderObject = null;
 
-    /** 连接观测模块 */
+    /** Connect to the observation module */
     observatory: ObservatoryObject = null;
 
     /**
      * v2ray
-     * @param inbounds 入站连接配置
-     * @param outbounds 出站连接配置
+     * @param inbounds inbound connection configuration
+     * @param outbounds outbound connection configuration
      */
     constructor(inbounds: InboundObject | InboundObject[], outbounds: OutboundObject | OutboundObject[]) {
         if (inbounds instanceof InboundObject) inbounds = [inbounds];
